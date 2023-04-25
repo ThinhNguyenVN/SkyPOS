@@ -10,6 +10,13 @@
     "parserOptions": {
         "project": "tsconfig.json"
     },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
+    },
     "plugins": ["prettier"],
     "rules": {
         "prettier/prettier": "error",
