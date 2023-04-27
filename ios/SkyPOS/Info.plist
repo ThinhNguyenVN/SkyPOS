@@ -6,6 +6,14 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>SkyPOS</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Icomoon.ttf</string>
+		<string>NotoSansKR-Bold.otf</string>
+		<string>NotoSansKR-Light.otf</string>
+		<string>NotoSansKR-Regular.otf</string>
+		<string>NotoSansKR-Medium.otf</string>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
