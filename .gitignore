@@ -17,5 +17,3 @@ src/component/index.tsx
 studio.sh
 .DS_Store
 ios/clip.xcworkspace/xcuserdata/mrgod.xcuserdatad/UserInterfaceState.xcuserstate
-.env.dev
-.env.production

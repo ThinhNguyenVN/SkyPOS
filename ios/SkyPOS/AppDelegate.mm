@@ -19,9 +19,12 @@
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
+ 
 #if DEBUG
+  NSLog(@"IS DEBUG");
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
+  NSLog(@"IS RELEASE");
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
 }
