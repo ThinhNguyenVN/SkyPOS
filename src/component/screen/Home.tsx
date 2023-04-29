@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { RootNavigationProp } from '../../modal/navigator'
 import RNConfig from 'react-native-config'
 import R from '../../resource'
+import * as yup from 'yup'
 import {
   AppBottomSheet,
   AppButton,
@@ -14,6 +15,7 @@ import {
 } from '../../uikit'
 import { Modalize } from 'react-native-modalize'
 import BottomSheetTopView from '../view/BottomSheetTopView'
+import AppInput from '../../uikit/AppInput'
 
 export default function Home() {
   const navigation = useNavigation<RootNavigationProp>()
@@ -54,6 +56,17 @@ export default function Home() {
             }}
             max={10}
             clearable
+          />
+          <AppInput
+            width={R.Dimens.MaxWidth - 32}
+            label="이메일 또는 휴대폰 번호"
+            placeholder="이메일 또는 휴대폰 번호를 입력해주세요"
+            validate={
+              yup.number().typeError('enter number format')
+              // //.string()
+              // .email('Please enter email format')
+              // .required('Please enter email')
+            }
           />
         </View>
       </AppBottomSheet>
