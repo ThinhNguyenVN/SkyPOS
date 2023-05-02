@@ -1,21 +1,23 @@
 import { View, ScrollView } from 'react-native'
 import React, { useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { RootNavigationProp } from '../../modal/navigator'
+import { RootNavigationProp } from '@modal/navigator'
 import RNConfig from 'react-native-config'
-import R from '../../resource'
+//import R from '@resource'
 import * as yup from 'yup'
 import {
-  AppBottomSheet,
-  AppButton,
   AppImage,
   AppQuantityControl,
-  AppText,
   AppTouchable,
-} from '../../uikit'
+  AppInput,
+  AppBottomSheet,
+  AppButton,
+  AppText,
+} from '@uikit'
+
 import { Modalize } from 'react-native-modalize'
-import BottomSheetTopView from '../view/BottomSheetTopView'
-import AppInput from '../../uikit/AppInput'
+import R from '@resource'
+import BottomSheetTopView from '@view/BottomSheetTopView'
 
 export default function Home() {
   const navigation = useNavigation<RootNavigationProp>()

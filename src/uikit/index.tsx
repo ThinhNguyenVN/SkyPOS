@@ -8,6 +8,7 @@ import AppTabView from './AppTabView'
 import AppTouchable from './AppTouchable'
 import AppQuantityControl from './AppQuantityControl'
 import AppAccordionView from './AppAccordionView'
+import AppInput from './AppInput'
 
 export {
   AppButton,
@@ -20,4 +21,5 @@ export {
   AppTouchable,
   AppQuantityControl,
   AppAccordionView,
+  AppInput,
 }

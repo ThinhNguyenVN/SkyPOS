@@ -158,7 +158,6 @@ const AppInput = React.forwardRef(
       setFocused(true)
     }
     const onBlur = () => {
-      console.log('ON BLUR', value)
       doValidate(value)
       setFocused(false)
     }
