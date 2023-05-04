@@ -5,7 +5,7 @@
     "paths": {
       "@action/*": ["./src/store/action/*"],
       "@api/*": ["./src/api/*"],
-      "@screen/*": ["./src/component/screen"],
+      "@screen/*": ["./src/component/screen/*"],
       "@container/*": ["./src/component/container/*"],
       "@view/*": ["./src/component/view/*"],
       "@navigator/*": ["./src/component/navigator/*"],
