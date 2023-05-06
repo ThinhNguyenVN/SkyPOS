@@ -1,9 +1,16 @@
 import React from 'react'
-import { StackNavigationOptions, createStackNavigator } from '@react-navigation/stack'
+import {
+  CardStyleInterpolators,
+  StackNavigationOptions,
+  createStackNavigator,
+} from '@react-navigation/stack'
 import { RootStackParamList } from '../../modal/navigator'
 import HomeScreen from '@screen/Home'
 import DetailScreen from '@screen/Detail'
 import HeaderView, { LeftButton, RightButton } from '@view/HeaderView'
+import TabNavigator from './TabNavigator'
+import AddOrderScreen from '@screen/AddOrderScreen'
+import { Platform } from 'react-native'
 
 const Stack = createStackNavigator<RootStackParamList>()
 
@@ -31,6 +38,7 @@ function DefaultHeaderOptions(): StackNavigationOptions {
 function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={DefaultHeaderOptions()}>
+      <Stack.Screen name="MainTab" component={TabNavigator} options={{ headerShown: false }} />
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -59,6 +67,18 @@ function RootNavigator() {
         component={DetailScreen}
         options={{
           title: 'Detail',
+        }}
+      />
+      <Stack.Screen
+        name="AddOrderScreen"
+        component={AddOrderScreen}
+        options={{
+          title: 'New Order',
+          headerLeft: (props) => <LeftButton icon={'ic-close'} onPress={props?.onPress} />,
+          cardStyleInterpolator: Platform.select({
+            ios: CardStyleInterpolators.forVerticalIOS,
+            android: CardStyleInterpolators.forBottomSheetAndroid,
+          }),
         }}
       />
     </Stack.Navigator>
