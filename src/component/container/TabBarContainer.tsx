@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Pressable, View, StyleSheet, Animated, ViewStyle, StyleProp } from 'react-native'
+import { Pressable, View, StyleSheet, ViewStyle, StyleProp } from 'react-native'
 import {
   useNavigationBuilder,
   TabRouter,

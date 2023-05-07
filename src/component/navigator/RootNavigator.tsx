@@ -74,7 +74,7 @@ function RootNavigator() {
         component={AddOrderScreen}
         options={{
           title: 'New Order',
-          headerLeft: (props) => <LeftButton icon={'ic-close'} onPress={props?.onPress} />,
+          headerLeft: () => <LeftButton icon={'ic-close'} />,
           cardStyleInterpolator: Platform.select({
             ios: CardStyleInterpolators.forVerticalIOS,
             android: CardStyleInterpolators.forBottomSheetAndroid,

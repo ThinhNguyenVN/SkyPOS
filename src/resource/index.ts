@@ -5,10 +5,19 @@ import * as Enums from './Enums'
 import * as Colors from './Colors'
 import * as Fonts from './Fonts'
 import Styles from './Styles'
+import I18n from 'i18n-js'
+import Locales from './locales'
 
+import { getLocales } from 'react-native-localize'
 import { createIconSetFromIcoMoon } from 'react-native-vector-icons'
 import moonConfig from './selection.json'
 const Icon = createIconSetFromIcoMoon(moonConfig, '', 'Icomoon.ttf')
+
+console.log(getLocales())
+
+I18n.fallbacks = true
+I18n.locale = getLocales()?.[0]?.languageTag
+I18n.translations = Locales
 
 const R = {
   Images,
@@ -19,6 +28,7 @@ const R = {
   Styles,
   Fonts,
   Icon,
+  I18n,
 }
 
 export default R
