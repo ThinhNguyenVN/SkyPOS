@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   button: {
-    borderRadius: 50,
+    borderRadius: 20,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: R.Colors.ButtonBorder,
   },
@@ -93,7 +93,6 @@ export default function AppButton(props: AppButtonProps): JSX.Element {
     }
     return renderIcon({ marginRight: 10 })
   }
-  console.log('width ::: ', width, widthButton)
   return (
     <View>
       <Button

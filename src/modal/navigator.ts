@@ -5,6 +5,7 @@ export type RootStackParamList = {
   Home: undefined
   Detail: { id: number }
   AddOrderScreen: undefined
+  Chat: undefined
 }
 
 export type RootNavigationProp = StackNavigationProp<RootStackParamList>

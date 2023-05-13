@@ -202,7 +202,7 @@ function TabBarContainer({
           <RightButton
             icon={'message-circle'}
             onPress={() => {
-              console.log('PRESS MESSAGE')
+              navigation.navigate('Chat')
             }}
           />
         )}

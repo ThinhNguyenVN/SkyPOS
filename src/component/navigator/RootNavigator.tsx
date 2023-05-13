@@ -10,6 +10,7 @@ import DetailScreen from '@screen/Detail'
 import HeaderView, { LeftButton, RightButton } from '@view/HeaderView'
 import TabNavigator from './TabNavigator'
 import AddOrderScreen from '@screen/AddOrderScreen'
+import ChatScreen from '@screen/ChatScreen'
 import { Platform } from 'react-native'
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -67,6 +68,13 @@ function RootNavigator() {
         component={DetailScreen}
         options={{
           title: 'Detail',
+        }}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          title: 'Message',
         }}
       />
       <Stack.Screen

@@ -34,7 +34,7 @@ export const PaddingLarge = IsSmallHeight ? 16 : 32
 export const DefaultFontSize = 16
 export const DefaultLineHeight = 24
 
-export const ButtonHeight = 52
+export const ButtonHeight = 40
 export const MaterialItemWidth = (MaxWidth - 16) / 2 - 16
 export const MaterialItemHeight = MaterialItemWidth + 68
 export const ThumbnailWidth = 200
