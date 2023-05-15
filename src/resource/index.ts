@@ -13,8 +13,6 @@ import { createIconSetFromIcoMoon } from 'react-native-vector-icons'
 import moonConfig from './selection.json'
 const Icon = createIconSetFromIcoMoon(moonConfig, '', 'Icomoon.ttf')
 
-console.log(getLocales())
-
 I18n.fallbacks = true
 I18n.locale = getLocales()?.[0]?.languageTag
 I18n.translations = Locales
