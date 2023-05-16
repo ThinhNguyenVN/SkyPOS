@@ -7,6 +7,7 @@ const api = axios.create({
   baseURL: `${Config.API_URL}/api`,
   timeout: R.Constants.REQUEST_TIMEOUT,
   headers: { Accept: 'application/vnd.github.v3+json' },
+  withCredentials: true,
 })
 
 export const getTableList = async (): Promise<ITable[]> => {
