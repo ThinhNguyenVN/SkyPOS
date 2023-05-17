@@ -10,7 +10,7 @@
       "@view/*": ["./src/component/view/*"],
       "@navigator/*": ["./src/component/navigator/*"],
       "@hook/*": ["./src/hook/*"],
-      "@modal/*": ["./src/modal/*"],
+      "@modal": ["./src/modal"],
       "@reducer/*": ["./src/store/reducer/*"],
       "@resource": ["./src/resource"],
       "@store/*": ["./src/store/*"],

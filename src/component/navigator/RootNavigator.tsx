@@ -9,7 +9,7 @@ import HomeScreen from '@screen/Home'
 import DetailScreen from '@screen/Detail'
 import HeaderView, { LeftButton, RightButton } from '@view/HeaderView'
 import TabNavigator from './TabNavigator'
-import AddOrderScreen from '@screen/AddOrderScreen'
+import AddOrderScreen from '@screen/order/AddOrderScreen'
 import ChatScreen from '@screen/ChatScreen'
 import { Platform } from 'react-native'
 

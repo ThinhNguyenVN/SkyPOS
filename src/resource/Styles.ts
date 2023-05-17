@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    width: '100%',
-    flexWrap: 'wrap',
   },
   rowWrap: {
     flexDirection: 'row',

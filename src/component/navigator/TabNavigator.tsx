@@ -1,9 +1,9 @@
 import React from 'react'
 import R from '@resource'
 import HistoryScreen from '@screen/HistoryScreen'
-import OrderScreen from '@screen/OrderScreen'
-import TableScreen from '@screen/TableScreen'
-import AddOrderScreen from '@screen/AddOrderScreen'
+import OrderScreen from '@screen/order/OrderScreen'
+import TableScreen from '@screen/order/TableScreen'
+import AddOrderScreen from '@screen/order/AddOrderScreen'
 
 import { createTabBarNavigator } from '@container/TabBarContainer'
 
