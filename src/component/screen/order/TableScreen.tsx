@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import React, { useEffect, useMemo } from 'react'
 import { AppText } from '@uikit'
 import R from '@resource'

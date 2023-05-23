@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export const ENV = {
   DEVELOP: 'dev',
   PRODUCTION: 'pro',
@@ -55,4 +56,47 @@ export const CURRENCY_DATA = {
     currency: 'VND',
     symbol: 'đ',
   },
+}
+
+export enum TABLE_STATUS {
+  Empty,
+  Ready,
+}
+
+export enum LOGIN_TYPE {
+  Facebook,
+  Google,
+  Mail,
+}
+
+export enum GENDER {
+  Male,
+  Female,
+  Other,
+}
+
+export enum PACKAGE {
+  Trial,
+  Premium,
+  Family,
+}
+
+export enum ROLE {
+  OWNER,
+  MANAGER,
+  STAFF,
+}
+
+export enum PAYMENT_TYPE {
+  Cash,
+  CreditCard,
+  BankTransfer,
+}
+
+export enum ORDER_STATUS {
+  Pending,
+  Accepted,
+  Rejected,
+  Canceled,
+  Completed,
 }

@@ -1,11 +1,15 @@
 /* @flow */
+import IPrinter from './IPrinter'
+import IShop from './IShop'
 import type ITable from './ITable'
 export default interface ITableCategory {
-  id: string
-  displayOrder: number
-  printerId: string
+  id: number
   name: string
-  code: string
-  tableCount: number
-  tables: Array<ITable>
+  code?: string
+  tableCount?: number
+  printerId?: number
+  printer?: IPrinter
+  shopId: number
+  shop: IShop
+  tables: ITable[]
 }

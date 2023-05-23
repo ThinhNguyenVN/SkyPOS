@@ -13,6 +13,7 @@
       "@modal": ["./src/modal"],
       "@reducer/*": ["./src/store/reducer/*"],
       "@resource": ["./src/resource"],
+      "@resource/*": ["./src/resource/*"],
       "@store/*": ["./src/store/*"],
       "@uikit": ["./src/uikit"],
       "@utils/*": ["./src/utils/*"]
