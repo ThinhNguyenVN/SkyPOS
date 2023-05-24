@@ -1,4 +1,25 @@
+import type IDiscount from './IDiscount'
+import type IOrder from './IOrder'
+import type IPoint from './IPoint'
+import type IPrinter from './IPrinter'
+import type IProduct from './IProduct'
+import type IProductCategory from './IProductCategory'
+import type IShop from './IShop'
 import type ITable from './ITable'
 import type ITableCategory from './ITableCategory'
+import type ITransaction from './ITransaction'
+import type IUser from './IUser'
 
-export { ITable, ITableCategory }
+export {
+  ITable,
+  ITableCategory,
+  IShop,
+  IUser,
+  IDiscount,
+  IPoint,
+  IPrinter,
+  IProductCategory,
+  IProduct,
+  IOrder,
+  ITransaction,
+}

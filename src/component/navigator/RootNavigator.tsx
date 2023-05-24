@@ -9,7 +9,8 @@ import HomeScreen from '@screen/Home'
 import DetailScreen from '@screen/Detail'
 import HeaderView, { LeftButton, RightButton } from '@view/HeaderView'
 import TabNavigator from './TabNavigator'
-import AddOrderScreen from '@screen/order/AddOrderScreen'
+import StartTransaction from '@screen/order/StartTransactionScreen'
+import AddOrder from '@screen/order/AddOrderScreen'
 import ChatScreen from '@screen/ChatScreen'
 import { Platform } from 'react-native'
 
@@ -78,8 +79,8 @@ function RootNavigator() {
         }}
       />
       <Stack.Screen
-        name="AddOrderScreen"
-        component={AddOrderScreen}
+        name="StartTransaction"
+        component={StartTransaction}
         options={{
           title: 'New Order',
           headerLeft: () => <LeftButton icon={'ic-close'} />,
@@ -87,6 +88,13 @@ function RootNavigator() {
             ios: CardStyleInterpolators.forVerticalIOS,
             android: CardStyleInterpolators.forBottomSheetAndroid,
           }),
+        }}
+      />
+      <Stack.Screen
+        name="AddOrder"
+        component={AddOrder}
+        options={{
+          title: 'Order',
         }}
       />
     </Stack.Navigator>

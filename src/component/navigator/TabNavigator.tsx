@@ -3,7 +3,7 @@ import R from '@resource'
 import HistoryScreen from '@screen/HistoryScreen'
 import OrderScreen from '@screen/order/OrderScreen'
 import TableScreen from '@screen/order/TableScreen'
-import AddOrderScreen from '@screen/order/AddOrderScreen'
+import AddOrderScreen from '@screen/order/StartTransactionScreen'
 
 import { createTabBarNavigator } from '@container/TabBarContainer'
 

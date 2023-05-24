@@ -258,7 +258,7 @@ function TabBarContainer({
               const button = {
                 image: R.Images.btn_add_order,
                 onPress: () => {
-                  navigation.navigate('AddOrderScreen')
+                  navigation.navigate('StartTransaction')
                 },
                 title: '',
               }

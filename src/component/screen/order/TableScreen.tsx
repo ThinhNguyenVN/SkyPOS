@@ -31,26 +31,23 @@ interface SectionType extends ITable {
 export default function TableScreen() {
   const { data: tableCategories } = useGetTableCategoryList()
 
-  useEffect(() => {
-    tableCategories?.map((table) => {
-      console.log('LOG ITEM : ', table.name)
-    })
-  }, [tableCategories])
-
   const sections = useMemo(() => {
     const arr: SectionType[] = []
-    tableCategories?.forEach((category) => {
-      arr.push({
-        type: 'category',
-        data: category,
-      } as SectionType)
+    if (tableCategories?.length) {
+      tableCategories?.forEach((category) => {
+        arr.push({
+          type: 'category',
+          data: category,
+        } as SectionType)
 
-      if (category.tables?.length) {
-        category.tables?.forEach((i) => {
-          arr.push(i)
-        })
-      }
-    })
+        if (category.tables?.length) {
+          category.tables?.forEach((i) => {
+            arr.push(i)
+          })
+        }
+      })
+    }
+
     return arr
   }, [tableCategories])
 

@@ -1,10 +1,12 @@
 import { StackNavigationProp } from '@react-navigation/stack'
+import type ITransaction from './ITransaction'
 
 export type RootStackParamList = {
   MainTab: undefined
   Home: undefined
   Detail: { id: number }
-  AddOrderScreen: undefined
+  StartTransaction: undefined
+  AddOrder: { transaction: ITransaction }
   Chat: undefined
 }
 

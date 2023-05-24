@@ -6,7 +6,7 @@ import IShop from './IShop'
 import IOrder from './IOrder'
 
 export default interface Transaction {
-  id: number
+  id?: number
   code?: string
   startTime?: Date
   endTime?: Date
@@ -25,9 +25,9 @@ export default interface Transaction {
   invoiceCount?: number
   tableId?: number
   table?: ITable
-  orders: IOrder[]
+  orders?: IOrder[]
   shopId: number
-  shop: IShop
+  shop?: IShop
 
   changeTableUserId?: number
   changeTableUser?: IUser

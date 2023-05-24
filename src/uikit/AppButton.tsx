@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 
 export default function AppButton(props: AppButtonProps): JSX.Element {
   const { width, containerStyle, image } = props
-  const widthButton = props.size === 'large' ? '100%' : 160
+  const widthButton = props.size === 'large' ? R.Dimens.MaxWidth - 64 : 160
   const height = props.height ?? R.Dimens.ButtonHeight
   const backgroundColor =
     props.type === 'primary' ? R.Colors.ButtonBackgroundPrimary : R.Colors.ButtonBackgroundSecondary
