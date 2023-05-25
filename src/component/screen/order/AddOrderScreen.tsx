@@ -1,10 +1,12 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
+import ProductCategoryView from '@view/order/ProductCategoryView'
+import R from '@resource'
 
 export default function AddOrderScreen() {
   return (
-    <View>
-      <Text>AddOrderScreen</Text>
+    <View style={R.Styles.container}>
+      <ProductCategoryView />
     </View>
   )
 }

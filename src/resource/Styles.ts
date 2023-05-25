@@ -7,7 +7,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.ContentBackground,
-    paddingTop: Dimens.MarginLarge,
+  },
+  containerWithPadding: {
+    flex: 1,
+    backgroundColor: Colors.ContentBackground,
+    padding: 16,
   },
 
   scrollContainer: {
@@ -44,37 +48,37 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     lineHeight: 40,
-    color: '#323F4B',
+    color: Colors.TextColor,
   },
   h2: {
     fontSize: 25,
     fontWeight: '700',
     lineHeight: 30,
-    color: '#323F4B',
+    color: Colors.TextColor,
   },
   h3: {
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 30,
-    color: '#323F4B',
+    color: Colors.TextColor,
   },
 
   h4Bold: {
     fontFamily: Fonts.Bold,
     fontSize: 16,
     fontWeight: '700',
-    color: '#323F4B',
+    color: Colors.TextColor,
   },
   h4: {
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
-    color: '#323F4B',
+    color: Colors.TextColor,
   },
   h5: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#7B8794',
+    color: Colors.TextColor,
   },
   textDisable: {
     color: Colors.Disabled,
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
   },
   dot: { fontSize: 5, marginRight: 8 },
   notificationText: {
-    color: '#093269',
+    color: Colors.TextColor,
     fontSize: 14,
   },
   button: {
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
   dotSmall: {
     fontSize: 4,
     paddingHorizontal: 5,
-    color: '#616161',
+    color: Colors.Gray,
   },
   bottom: {
     position: 'absolute',
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: Colors.Border,
     paddingTop: 16,
     backgroundColor: Colors.ContentBackground,
     shadowOffset: {

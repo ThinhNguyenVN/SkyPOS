@@ -1,6 +1,6 @@
 import Config from 'react-native-config'
 import axios from 'axios'
-import type { ITable, ITableCategory, ITransaction } from '@modal'
+import type { IProductCategory, ITable, ITableCategory, ITransaction } from '@modal'
 import R from '@resource'
 
 const api = axios.create({
@@ -29,7 +29,7 @@ export const createTransaction = async (transaction: ITransaction): Promise<ITra
   return res.data
 }
 
-export const getProductCategories = async (transaction: ITransaction): Promise<ITransaction> => {
-  const res = await api.post('/products/categories', transaction).then((res) => res.data)
+export const getProductCategories = async (): Promise<IProductCategory[]> => {
+  const res = await api.get('/products/categories').then((res) => res.data)
   return res.data
 }

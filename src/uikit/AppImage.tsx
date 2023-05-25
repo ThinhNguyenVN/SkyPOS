@@ -103,8 +103,8 @@ const AppImage = (props: AppImageProps): JSX.Element => {
                 source={defaultImage || R.Images.img_default}
                 style={{
                   zIndex: 2,
-                  width: '70%',
-                  height: '70%',
+                  width: '90%',
+                  height: '90%',
                 }}
                 resizeMode={FastImage.resizeMode.contain}
               />

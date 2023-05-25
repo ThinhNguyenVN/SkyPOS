@@ -18,12 +18,13 @@ export default function StartTransactionScreen() {
   const createOder = useCreateTransaction()
   const navigation = useNavigation<RootNavigationProp>()
   const onOrderPress = () => {
-    createOder.mutateAsync({ shopId: 1 }).then((transaction) => {
-      console.log('create transaction result : ', transaction)
-      if (transaction) {
-        navigation.navigate('AddOrder', { transaction })
-      }
-    })
+    navigation.navigate('AddOrder', { transaction: { shopId: 1, id: 1 } })
+    // createOder.mutateAsync({ shopId: 1 }).then((transaction) => {
+
+    //   if (transaction) {
+    //     navigation.navigate('AddOrder', { transaction })
+    //   }
+    // })
   }
   return (
     <View style={styles.container}>
