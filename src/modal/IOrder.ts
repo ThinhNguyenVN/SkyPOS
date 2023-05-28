@@ -5,21 +5,21 @@ import IDiscount from './IDiscount'
 import ITransaction from './ITransaction'
 
 export default interface Order {
-  id: number
-  transactionId: number
-  transaction: ITransaction
+  id?: number
+  transactionId?: number
+  transaction?: ITransaction
   code?: string
   status: ORDER_STATUS
   note?: string
-  productId: number
-  product: IProduct
+  productId?: number
+  product?: IProduct
   quantity: number
-  totalStandardPrice: number
-  totalPrice: number
+  totalStandardPrice?: number
+  totalPrice?: number
   discountId?: number
   discount?: IDiscount
   serviceCharge?: number
-  amount: number
+  amount?: number
   serviceTime?: Date
   createUserId?: number
   createUser?: IUser

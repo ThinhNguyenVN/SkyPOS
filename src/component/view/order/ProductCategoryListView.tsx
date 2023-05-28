@@ -5,6 +5,8 @@ import { makeStyles } from '@rneui/base'
 import { useGetProductCategories } from '@hook/useProduct'
 import { AppImage, AppText, AppTouchable } from '@uikit'
 import { ScrollView } from 'react-native-gesture-handler'
+import { IProductCategory } from '@modal'
+import { useOrderContext } from '@hook/useOrderContext'
 
 const useStyles = makeStyles(() => {
   const itemSize =
@@ -44,16 +46,25 @@ const useStyles = makeStyles(() => {
   }
 })
 
-export default function ProductCategoryView() {
+export default function ProductCategoryListView() {
   const styles = useStyles()
+  const { setSelectedProductCategory, scrollView } = useOrderContext()
   const { data: categories } = useGetProductCategories()
 
+  const onCategoryPress = (category: IProductCategory) => () => {
+    setSelectedProductCategory?.(category)
+    scrollView?.current?.scrollTo({ x: R.Dimens.MaxWidth, animated: true })
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         {categories?.map((category) => {
           return (
-            <AppTouchable style={styles.category} key={`categori-${category.id}`}>
+            <AppTouchable
+              style={styles.category}
+              key={`category-${category.id}`}
+              onPress={onCategoryPress(category)}
+            >
               <AppImage url={category.image} style={styles.categoryImage} showDefault />
               <AppText text={category.name} allowFontScaling style={styles.categoryText} />
             </AppTouchable>

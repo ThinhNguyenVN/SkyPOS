@@ -46,11 +46,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: '100%',
     zIndex: 2,
-    flex: 1,
   },
   iconLeft: {
     position: 'absolute',
-    left: 20,
+    left: 10,
     justifyContent: 'center',
     alignItems: 'flex-start',
     zIndex: 2,
@@ -63,7 +62,10 @@ const styles = StyleSheet.create({
 
 export default function AppButton(props: AppButtonProps): JSX.Element {
   const { width, containerStyle, image } = props
-  const widthButton = props.size === 'large' ? R.Dimens.MaxWidth - 64 : 160
+  const widthButton =
+    props.size === 'large'
+      ? R.Dimens.MaxWidth - 64
+      : (R.Dimens.MaxWidth - R.Dimens.MarginMedium * 3) / 2
   const height = props.height ?? R.Dimens.ButtonHeight
   const backgroundColor =
     props.type === 'primary' ? R.Colors.ButtonBackgroundPrimary : R.Colors.ButtonBackgroundSecondary

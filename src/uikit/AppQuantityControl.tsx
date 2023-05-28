@@ -1,5 +1,5 @@
 import { View, ViewStyle, StyleSheet } from 'react-native'
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import AppImage from './AppImage'
 import AppText from './AppText'
 import R from '../resource'
@@ -52,6 +52,10 @@ export default function AppQuantityControl({
   const [loading, setLoading] = useState(false)
   const valueRef = useRef(value)
   const intervalRef = useRef<number>()
+
+  useEffect(() => {
+    setValueState(value)
+  }, [value])
 
   const delayFunc = () => {
     if (onSubmitQuantity) {
