@@ -1,7 +1,6 @@
 import { View, ScrollView } from 'react-native'
 import React, { useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { RootNavigationProp } from '@modal/navigator'
 import RNConfig from 'react-native-config'
 //import R from '@resource'
 import * as yup from 'yup'
@@ -18,9 +17,10 @@ import {
 import { Modalize } from 'react-native-modalize'
 import R from '@resource'
 import BottomSheetTopView from '@view/BottomSheetTopView'
+import { INavigator } from '@modal'
 
 export default function Home() {
-  const navigation = useNavigation<RootNavigationProp>()
+  const navigation = useNavigation<INavigator.RootNavigationProp>()
   const sortBottomSheetRef = useRef<Modalize>()
   const renderMoreMenu = () => {
     return (

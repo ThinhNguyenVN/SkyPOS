@@ -9,6 +9,7 @@ import type ITable from './ITable'
 import type ITableCategory from './ITableCategory'
 import type ITransaction from './ITransaction'
 import type IUser from './IUser'
+import type * as INavigator from './navigator'
 
 export {
   ITable,
@@ -22,4 +23,5 @@ export {
   IProduct,
   IOrder,
   ITransaction,
+  INavigator,
 }

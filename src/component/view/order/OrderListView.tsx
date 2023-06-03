@@ -7,7 +7,7 @@ import { AppButton, AppText } from '@uikit'
 import { numberWithCommas } from '@utils/index'
 import { useOrderContext } from '@hook/useOrderContext'
 import { FAB } from '@rneui/themed'
-import { updateOrderList } from '@utils/order'
+import { getTotalAmount, updateOrderList } from '@utils/order'
 import ProductItemView from './ProductItemView'
 
 const useStyles = makeStyles(() => ({
@@ -86,7 +86,7 @@ export default function OrderListView() {
       <View style={styles.bottom}>
         <View style={styles.amountView}>
           <AppText style={R.Styles.h5}>Amount: </AppText>
-          <AppText style={styles.amount}>{numberWithCommas(100000)}</AppText>
+          <AppText style={styles.amount}>{numberWithCommas(getTotalAmount(orders))}</AppText>
         </View>
 
         <View style={R.Styles.rowSpaceBetween}>

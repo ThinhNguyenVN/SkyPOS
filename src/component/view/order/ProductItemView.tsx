@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useMemo } from 'react'
 import R from '@resource'
 import { AppTouchable, AppImage, AppText, AppQuantityControl } from '@uikit'
 import { numberWithCommas } from '@utils/index'
@@ -32,6 +32,11 @@ const styles = StyleSheet.create({
   productQuantity: {
     paddingRight: 8,
   },
+  amount: {
+    color: R.Colors.Green,
+    fontFamily: R.Fonts.Bold,
+    fontSize: 16,
+  },
 })
 
 const ProductItemView = ({
@@ -47,6 +52,19 @@ const ProductItemView = ({
       onQuantityChange(order.quantity + 1, product, order)
     }
   }
+
+  const renderAmount = () => {
+    if (order) {
+      return (
+        <>
+          <AppText>{numberWithCommas(product.price)}</AppText>
+          <AppText style={styles.amount}>{numberWithCommas(order.amount)}</AppText>
+        </>
+      )
+    }
+    return <AppText>{numberWithCommas(product.price)}</AppText>
+  }
+
   return (
     <AppTouchable
       style={styles.productItem}
@@ -59,7 +77,7 @@ const ProductItemView = ({
         <AppImage url={product.image} style={styles.productImage} defaultImage />
         <View style={styles.productInfo}>
           <AppText>{product.name}</AppText>
-          <AppText>{numberWithCommas(product.price)}</AppText>
+          {renderAmount()}
         </View>
       </View>
       {!!order && (

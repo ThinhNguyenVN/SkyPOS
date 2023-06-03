@@ -28,7 +28,6 @@ export const updateOrderList = (
   order?: IOrder,
 ): IOrder[] => {
   const tmpOrders = [...orders]
-
   const tmpProduct = product || order?.product
   let existingOrder =
     order || (!!tmpOrders?.length && tmpOrders.find((o) => o?.product?.id === tmpProduct?.id))
@@ -41,4 +40,8 @@ export const updateOrderList = (
     existingOrder = calculateOrder(existingOrder, quantity, tmpProduct)
   }
   return tmpOrders.filter((o) => o.quantity !== 0)
+}
+
+export const getTotalAmount = (orders: IOrder[]) => {
+  return orders.reduce((totalAmount, order) => totalAmount + (order?.amount ?? 0), 0)
 }

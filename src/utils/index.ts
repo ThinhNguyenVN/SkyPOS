@@ -16,7 +16,6 @@ export const getCurrencyValue = (
   currencyData = R.Enums.CURRENCY_DATA?.[R.Enums.CURRENCY_TYPE.USD],
   precision = 0,
 ) => {
-  console.log('getCurrencyValue ', currencyData)
   return currency(value, {
     symbol: currencyData.symbol,
     precision: precision,

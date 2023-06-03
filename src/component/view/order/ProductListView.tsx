@@ -47,16 +47,8 @@ export default function ProductListView({ products }: ProductListViewProps) {
   }
 
   const onQuantityChange = (quantity: number, product: IProduct, order: IOrder) => {
-    console.log('onQuantityChange --- ', product.name, quantity)
     setOrders(updateOrderList(transaction, orders, quantity, product, order))
   }
-
-  useEffect(() => {
-    console.log(
-      'order list change: ---- ',
-      orders.map((o) => ({ name: o.product.name, quantity: o.quantity })),
-    )
-  }, [orders])
 
   const onNextPress = () => {
     // @ts-ignore

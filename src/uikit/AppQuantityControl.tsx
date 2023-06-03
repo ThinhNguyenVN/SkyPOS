@@ -49,40 +49,58 @@ export default function AppQuantityControl({
   disabled,
 }: AppQuantityControlProps) {
   const [loading, setLoading] = useState(false)
-  const valueRef = useRef(value)
+  const [valueState, setValueState] = useState(value)
+  const valueRef = useRef(valueState)
   const intervalRef = useRef<number>()
 
   useEffect(() => {
-    valueRef.current = value
+    if (value !== valueState) {
+      setValueState(value)
+      valueRef.current = value
+    }
   }, [value])
 
-  const delayFunc = () => {
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [])
+
+  const delayFunc = (quantity: number) => {
     if (onSubmitQuantity) {
       const callback = () => {
         setLoading(false)
       }
       setLoading(true)
-      onSubmitQuantity(valueRef.current, callback)
+      onSubmitQuantity(quantity, callback)
     }
   }
 
-  const debounceFunc = useCallback(debounce(delayFunc, 1000), [])
+  const debounceFunc = useCallback(
+    debounce((quantity) => delayFunc(quantity), 1000),
+    [],
+  )
 
   const calculate = (value: number) => {
-    const result = valueRef.current + value
-    if (result >= min && result <= max) {
-      onValueChange(result)
-      valueRef.current = result
-      debounceFunc()
+    valueRef.current += value
+    if (valueRef.current >= min && valueRef.current <= max) {
+      onValueChange(valueRef.current)
+      setValueState(valueRef.current)
+      debounceFunc(valueRef.current)
     }
   }
   const onPressStart = (diff: number) => () => {
+    console.log('onPressStart--- ')
     calculate(diff)
     intervalRef.current = setInterval(() => {
+      console.log('press start interval ----- ', diff, valueState)
       calculate(diff)
     }, 200)
   }
   const onPressEnd = () => {
+    console.log('onPressEnd --- ')
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
     }
@@ -118,21 +136,21 @@ export default function AppQuantityControl({
         multiTouch
         onPressIn={onPressStart(1)}
         onPressOut={onPressEnd}
-        disabled={valueRef.current >= max || loading || disabled}
+        disabled={valueState >= max || loading || disabled}
       >
         <AppImage source={R.Images.btn_plus_gray} width={32} height={32} />
       </AppTouchable>
-      <AppText style={[styles.text, disabled ? styles.disabled : {}]}>{valueRef.current}</AppText>
+      <AppText style={[styles.text, disabled ? styles.disabled : {}]}>{valueState}</AppText>
       <AppTouchable
         style={disabled ? styles.disabled : {}}
         multiTouch
         onPressIn={onPressStart(-1)}
         onPressOut={onPressEnd}
-        disabled={valueRef.current <= min || loading || disabled}
+        disabled={valueState <= min || loading || disabled}
       >
         <AppImage source={R.Images.btn_minus_gray} width={32} height={32} />
       </AppTouchable>
-      
+
       {renderClearButton()}
     </View>
   )
