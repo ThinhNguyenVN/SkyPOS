@@ -39,7 +39,7 @@ type AppQuantityControlProps = {
 }
 
 export default function AppQuantityControl({
-  value = 1,
+  value = 0,
   onValueChange,
   containerStyle,
   min = 1,
@@ -48,13 +48,12 @@ export default function AppQuantityControl({
   onSubmitQuantity,
   disabled,
 }: AppQuantityControlProps) {
-  const [valueState, setValueState] = useState(value)
   const [loading, setLoading] = useState(false)
   const valueRef = useRef(value)
   const intervalRef = useRef<number>()
 
   useEffect(() => {
-    setValueState(value)
+    valueRef.current = value
   }, [value])
 
   const delayFunc = () => {
@@ -72,7 +71,6 @@ export default function AppQuantityControl({
   const calculate = (value: number) => {
     const result = valueRef.current + value
     if (result >= min && result <= max) {
-      setValueState(result)
       onValueChange(result)
       valueRef.current = result
       debounceFunc()
@@ -91,7 +89,6 @@ export default function AppQuantityControl({
   }
 
   const onClearPress = () => {
-    setValueState(0)
     onValueChange(0)
   }
 
@@ -119,22 +116,23 @@ export default function AppQuantityControl({
       <AppTouchable
         style={disabled ? styles.disabled : {}}
         multiTouch
-        onPressIn={onPressStart(-1)}
-        onPressOut={onPressEnd}
-        disabled={valueState <= min || loading || disabled}
-      >
-        <AppImage source={R.Images.btn_minus_gray} width={32} height={32} />
-      </AppTouchable>
-      <AppText style={[styles.text, disabled ? styles.disabled : {}]}>{valueState}</AppText>
-      <AppTouchable
-        style={disabled ? styles.disabled : {}}
-        multiTouch
         onPressIn={onPressStart(1)}
         onPressOut={onPressEnd}
-        disabled={valueState >= max || loading || disabled}
+        disabled={valueRef.current >= max || loading || disabled}
       >
         <AppImage source={R.Images.btn_plus_gray} width={32} height={32} />
       </AppTouchable>
+      <AppText style={[styles.text, disabled ? styles.disabled : {}]}>{valueRef.current}</AppText>
+      <AppTouchable
+        style={disabled ? styles.disabled : {}}
+        multiTouch
+        onPressIn={onPressStart(-1)}
+        onPressOut={onPressEnd}
+        disabled={valueRef.current <= min || loading || disabled}
+      >
+        <AppImage source={R.Images.btn_minus_gray} width={32} height={32} />
+      </AppTouchable>
+      
       {renderClearButton()}
     </View>
   )

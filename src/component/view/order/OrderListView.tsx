@@ -1,12 +1,14 @@
 import { FlatList, StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { makeStyles } from '@rneui/base'
 import R from '@resource'
-import type { IOrder } from '@modal'
-import { AppButton, AppImage, AppQuantityControl, AppText } from '@uikit'
+import type { IOrder, IProduct } from '@modal'
+import { AppButton, AppText } from '@uikit'
 import { numberWithCommas } from '@utils/index'
 import { useOrderContext } from '@hook/useOrderContext'
 import { FAB } from '@rneui/themed'
+import { updateOrderList } from '@utils/order'
+import ProductItemView from './ProductItemView'
 
 const useStyles = makeStyles(() => ({
   listContainer: {
@@ -18,23 +20,6 @@ const useStyles = makeStyles(() => ({
     width: R.Dimens.MaxWidth,
     borderRightColor: R.Colors.Border,
     borderRightWidth: StyleSheet.hairlineWidth,
-  },
-  productItem: {
-    flexDirection: 'row',
-    height: 80,
-    width: R.Dimens.MaxWidth,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  productImage: {
-    width: 80,
-    height: 80,
-  },
-  productInfo: {
-    padding: 8,
-  },
-  productQuantity: {
-    paddingRight: 8,
   },
   bottom: {
     ...R.Styles.bottom,
@@ -64,42 +49,25 @@ const useStyles = makeStyles(() => ({
 
 export default function OrderListView() {
   const styles = useStyles()
-  const { orders, setOrders, scrollView } = useOrderContext()
+  const { orders, setOrders, scrollView, transaction } = useOrderContext()
 
-  useEffect(() => {
-    console.log(
-      'orders changed : ',
-      orders.map((i) => ({ name: i.product?.name, quanlity: i.quantity })),
-    )
-  }, [orders])
-
-  const onValueChange = (val) => {}
+  const onQuantityChange = (quantity: number, product: IProduct, order: IOrder) => {
+    setOrders(updateOrderList(transaction, orders, quantity, product, order))
+  }
 
   const onAddMorePress = () => {
+    // @ts-ignore
     scrollView?.current?.scrollTo({ x: 0, animated: true })
   }
-  const onOrderPress = () => {}
-  const onCancelPress = () => {}
 
   const renderItem = ({ item }: { item: IOrder }) => {
     return (
-      <View style={styles.productItem}>
-        <View style={R.Styles.row}>
-          <AppImage url={item?.product?.image} style={styles.productImage} defaultImage />
-          <View style={styles.productInfo}>
-            <AppText>{item?.product?.name}</AppText>
-            <AppText>{numberWithCommas(item?.product?.price)}</AppText>
-          </View>
-        </View>
-        <AppQuantityControl
-          min={0}
-          value={item.quantity}
-          containerStyle={styles.productQuantity}
-          onValueChange={onValueChange}
-        />
-      </View>
+      <ProductItemView product={item.product} order={item} onQuantityChange={onQuantityChange} />
     )
   }
+
+  const onCancelPress = () => {}
+  const onOrderPress = () => {}
 
   return (
     <View style={styles.container}>
@@ -107,6 +75,7 @@ export default function OrderListView() {
         icon={<R.Icon name={'plus'} size={24} color={'white'} />}
         color={R.Colors.Primary}
         style={styles.addButton}
+        onPress={onAddMorePress}
       />
       <FlatList
         data={orders}

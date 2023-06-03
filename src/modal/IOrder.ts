@@ -12,7 +12,7 @@ export default interface Order {
   status: ORDER_STATUS
   note?: string
   productId?: number
-  product?: IProduct
+  product: IProduct
   quantity: number
   totalStandardPrice?: number
   totalPrice?: number
