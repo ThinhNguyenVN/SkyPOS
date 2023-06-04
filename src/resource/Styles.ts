@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   h5: {
     fontSize: 12,
     fontWeight: '500',
+    lineHeight: 15,
     color: Colors.TextColor,
   },
   textDisable: {

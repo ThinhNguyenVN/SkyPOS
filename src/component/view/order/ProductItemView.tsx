@@ -12,30 +12,48 @@ type ProductItemViewProps = {
   onCreateOrder?: (product: IProduct) => void
 }
 
+const ProductQuantityWidth = 116
+const ImageSize = 80
 const styles = StyleSheet.create({
   productItem: {
     flexDirection: 'row',
-    height: 80,
+    height: ImageSize,
     width: R.Dimens.MaxWidth,
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: R.Colors.Border,
   },
+  productView: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
   productImage: {
-    width: 80,
-    height: 80,
+    width: ImageSize,
+    height: ImageSize,
   },
   productInfo: {
     padding: 8,
   },
   productQuantity: {
-    paddingRight: 8,
+    width: ProductQuantityWidth,
   },
   amount: {
     color: R.Colors.Green,
     fontFamily: R.Fonts.Bold,
     fontSize: 16,
+    lineHeight: 20,
+  },
+  priceSmallText: {
+    ...R.Styles.h5,
+  },
+  priceView: {
+    maxWidth: R.Dimens.MaxWidth - ProductQuantityWidth - ImageSize,
+  },
+  productName: {
+    ...R.Styles.h4,
+    width: R.Dimens.MaxWidth - ImageSize,
   },
 })
 
@@ -56,13 +74,15 @@ const ProductItemView = ({
   const renderAmount = () => {
     if (order) {
       return (
-        <>
-          <AppText>{numberWithCommas(product.price)}</AppText>
+        <View style={styles.priceView}>
+          <AppText style={styles.priceSmallText} numberOfLines={2}>
+            {numberWithCommas(product.price)} (please take more sweet and also take care )
+          </AppText>
           <AppText style={styles.amount}>{numberWithCommas(order.amount)}</AppText>
-        </>
+        </View>
       )
     }
-    return <AppText>{numberWithCommas(product.price)}</AppText>
+    return <AppText style={styles.priceSmallText}>{numberWithCommas(product.price)}</AppText>
   }
 
   return (
@@ -73,10 +93,12 @@ const ProductItemView = ({
       hitSlop={{ top: 0, bottom: 0, left: 0, right: -60 }}
       multiTouch
     >
-      <View style={R.Styles.row}>
+      <View style={styles.productView}>
         <AppImage url={product.image} style={styles.productImage} defaultImage />
         <View style={styles.productInfo}>
-          <AppText>{product.name}</AppText>
+          <AppText style={styles.productName} numberOfLines={1}>
+            {product.name}
+          </AppText>
           {renderAmount()}
         </View>
       </View>

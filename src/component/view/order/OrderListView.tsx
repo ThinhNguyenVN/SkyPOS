@@ -9,6 +9,13 @@ import { useOrderContext } from '@hook/useOrderContext'
 import { FAB } from '@rneui/themed'
 import { getTotalAmount, updateOrderList } from '@utils/order'
 import ProductItemView from './ProductItemView'
+import Animated, {
+  Layout,
+  SlideInLeft,
+  SlideOutLeft,
+  ZoomIn,
+  ZoomOut,
+} from 'react-native-reanimated'
 
 const useStyles = makeStyles(() => ({
   listContainer: {
@@ -62,9 +69,18 @@ export default function OrderListView() {
 
   const renderItem = ({ item }: { item: IOrder }) => {
     return (
-      <ProductItemView product={item.product} order={item} onQuantityChange={onQuantityChange} />
+      <Animated.View layout={Layout.springify()} entering={SlideInLeft} exiting={SlideOutLeft}>
+        <ProductItemView product={item.product} order={item} onQuantityChange={onQuantityChange} />
+      </Animated.View>
     )
   }
+
+  const renderCell = React.useCallback(
+    (props: any) => (
+      <Animated.View {...props} layout={Layout.springify()} entering={ZoomIn} exiting={ZoomOut} />
+    ),
+    [],
+  )
 
   const onCancelPress = () => {}
   const onOrderPress = () => {}
@@ -77,11 +93,13 @@ export default function OrderListView() {
         style={styles.addButton}
         onPress={onAddMorePress}
       />
-      <FlatList
+      <Animated.FlatList
+        itemLayoutAnimation={Layout.delay(200)}
         data={orders}
         contentContainerStyle={styles.listContainer}
         renderItem={renderItem}
         keyExtractor={(item) => `order-item-${item?.product?.id}`}
+        CellRendererComponent={renderCell}
       />
       <View style={styles.bottom}>
         <View style={styles.amountView}>

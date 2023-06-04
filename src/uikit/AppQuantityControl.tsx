@@ -11,9 +11,10 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     fontSize: 25,
     fontWeight: '400',
-    marginHorizontal: 16,
     marginBottom: 0,
     color: R.Colors.TextColorSelected,
+    width: 45,
+    textAlign: 'center',
   },
   clear: {
     marginLeft: 20,
@@ -92,15 +93,12 @@ export default function AppQuantityControl({
     }
   }
   const onPressStart = (diff: number) => () => {
-    console.log('onPressStart--- ')
     calculate(diff)
     intervalRef.current = setInterval(() => {
-      console.log('press start interval ----- ', diff, valueState)
       calculate(diff)
     }, 200)
   }
   const onPressEnd = () => {
-    console.log('onPressEnd --- ')
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
     }
@@ -140,7 +138,13 @@ export default function AppQuantityControl({
       >
         <AppImage source={R.Images.btn_plus_gray} width={32} height={32} />
       </AppTouchable>
-      <AppText style={[styles.text, disabled ? styles.disabled : {}]}>{valueState}</AppText>
+      <AppText
+        adjustsFontSizeToFit
+        numberOfLines={1}
+        style={[styles.text, disabled ? styles.disabled : {}]}
+      >
+        {valueState}
+      </AppText>
       <AppTouchable
         style={disabled ? styles.disabled : {}}
         multiTouch

@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { makeStyles } from '@rneui/base'
 import R from '@resource'
 import { IOrder, IProduct } from '@modal'
@@ -7,6 +7,7 @@ import { AppButton } from '@uikit'
 import { useOrderContext } from '@hook/useOrderContext'
 import { updateOrderList } from '@utils/order'
 import ProductItemView from './ProductItemView'
+import Animated, { Layout, ZoomIn, ZoomOut } from 'react-native-reanimated'
 
 const useStyles = makeStyles(() => ({
   listContainer: {
@@ -58,18 +59,20 @@ export default function ProductListView({ products }: ProductListViewProps) {
   const renderItem = ({ item }: { item: IProduct }) => {
     const existingOrder = orders.find((o) => o?.product?.id === item.id)
     return (
-      <ProductItemView
-        product={item}
-        order={existingOrder}
-        onQuantityChange={onQuantityChange}
-        onCreateOrder={createOrder}
-      />
+      <Animated.View layout={Layout.springify()} entering={ZoomIn} exiting={ZoomOut}>
+        <ProductItemView
+          product={item}
+          order={existingOrder}
+          onQuantityChange={onQuantityChange}
+          onCreateOrder={createOrder}
+        />
+      </Animated.View>
     )
   }
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <Animated.FlatList
         data={products}
         contentContainerStyle={styles.listContainer}
         renderItem={renderItem}
