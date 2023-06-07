@@ -1,4 +1,4 @@
-import { PAYMENT_TYPE } from '@resource/Enums'
+import { PAYMENT_TYPE, ORDER_STATUS } from '@resource/Enums'
 import IDiscount from './IDiscount'
 import IUser from './IUser'
 import ITable from './ITable'
@@ -9,10 +9,12 @@ export default interface Transaction {
   id?: number
   code?: string
   startTime?: Date
+  status?: keyof typeof ORDER_STATUS
   endTime?: Date
-  paymentType?: PAYMENT_TYPE
+  paymentType?: keyof typeof PAYMENT_TYPE
   customerCash?: number
   numberCustomer?: number
+  customerName?: string
   totalProduct?: number
   totalOrder?: number
   discountId?: number
@@ -26,7 +28,7 @@ export default interface Transaction {
   tableId?: number
   table?: ITable
   orders?: IOrder[]
-  shopId: number
+  shopId?: number
   shop?: IShop
 
   changeTableUserId?: number

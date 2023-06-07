@@ -1,5 +1,6 @@
 import R from '@resource'
 import currency from 'currency.js'
+import moment from 'moment'
 
 export const formatCurrency = (
   value: number,
@@ -28,7 +29,7 @@ export function numberWithCommas(numb: string | number | undefined) {
   } else if (typeof numb === 'string') {
     return numb.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   } else {
-    return null
+    return ''
   }
 }
 
@@ -36,4 +37,8 @@ export function validUrl(path: string | undefined) {
   const urlRegrex = /^(^http[s]?:\/{2})|(^www)|(^\/{1,2})/g
   const res = urlRegrex.test(path ?? '')
   return res
+}
+
+export function getAppCode(refix: string, id: number | string) {
+  return `${refix}${id?.toString().padStart(5, '0')}`
 }

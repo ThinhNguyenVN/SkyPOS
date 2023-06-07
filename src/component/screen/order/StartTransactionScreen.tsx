@@ -4,8 +4,8 @@ import { makeStyles } from '@rneui/base'
 import R from '@resource'
 import { AppButton, AppInput } from '@uikit'
 import { useCreateTransaction } from '@hook/userOrder'
-import { useNavigation } from '@react-navigation/native'
-import { RootNavigationProp } from 'src/modal/navigator'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { RootNavigationProp, RootStackParamList } from 'src/modal/navigator'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -15,16 +15,17 @@ const useStyles = makeStyles(() => ({
 }))
 export default function StartTransactionScreen() {
   const styles = useStyles()
-  const createOder = useCreateTransaction()
+  const createTransaction = useCreateTransaction()
+  const route = useRoute<RouteProp<RootStackParamList, 'StartTransaction'>>()
+  const { table } = route.params || {}
   const navigation = useNavigation<RootNavigationProp>()
   const onOrderPress = () => {
-    navigation.navigate('AddOrder', { transaction: { shopId: 1, id: 1 } })
-    // createOder.mutateAsync({ shopId: 1 }).then((transaction) => {
-
-    //   if (transaction) {
-    //     navigation.navigate('AddOrder', { transaction })
-    //   }
-    // })
+    createTransaction.mutateAsync({ shopId: 1, tableId: table?.id }).then((transaction) => {
+      if (transaction?.id) {
+        navigation.replace('TransactionDetail', { transactionId: transaction.id })
+        navigation.navigate('AddOrder', { transaction })
+      }
+    })
   }
   return (
     <View style={styles.container}>

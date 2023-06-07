@@ -9,10 +9,10 @@ export default interface Order {
   transactionId?: number
   transaction?: ITransaction
   code?: string
-  status: ORDER_STATUS
+  status: keyof typeof ORDER_STATUS
   note?: string
   productId?: number
-  product: IProduct
+  product?: IProduct
   quantity: number
   totalStandardPrice?: number
   totalPrice?: number

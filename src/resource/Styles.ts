@@ -90,12 +90,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
 
-  listItem: {
-    width: '100%',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.Border,
-  },
-
   topBarItem: {
     borderColor: '#7B8794',
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -211,6 +205,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     color: Colors.Red,
+  },
+  listItemLabel: {
+    fontSize: 14,
+    lineHeight: 16,
+    fontFamily: Fonts.Bold,
+    color: Colors.TextColor,
+    fontWeight: '700',
+  },
+  amount: {
+    fontFamily: Fonts.Bold,
+    color: Colors.Green,
+    fontSize: 20,
   },
 })
 

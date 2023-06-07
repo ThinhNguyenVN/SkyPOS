@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import React, { useMemo } from 'react'
+import React from 'react'
 import R from '@resource'
 import { AppTouchable, AppImage, AppText, AppQuantityControl } from '@uikit'
 import { numberWithCommas } from '@utils/index'
@@ -8,7 +8,7 @@ import { IOrder, IProduct } from '@modal'
 type ProductItemViewProps = {
   product: IProduct
   order?: IOrder
-  onQuantityChange: (quantity: number, product: IProduct, order: IOrder) => void
+  onQuantityChange?: (quantity: number, product: IProduct, order: IOrder) => void
   onCreateOrder?: (product: IProduct) => void
 }
 
@@ -66,7 +66,7 @@ const ProductItemView = ({
   const onPress = () => {
     if (!order) {
       !!onCreateOrder && onCreateOrder(product)
-    } else {
+    } else if (!!onQuantityChange) {
       onQuantityChange(order.quantity + 1, product, order)
     }
   }
@@ -76,7 +76,7 @@ const ProductItemView = ({
       return (
         <View style={styles.priceView}>
           <AppText style={styles.priceSmallText} numberOfLines={2}>
-            {numberWithCommas(product.price)} (please take more sweet and also take care )
+            {numberWithCommas(product.price)}
           </AppText>
           <AppText style={styles.amount}>{numberWithCommas(order.amount)}</AppText>
         </View>
@@ -102,7 +102,7 @@ const ProductItemView = ({
           {renderAmount()}
         </View>
       </View>
-      {!!order && (
+      {!!order && !!onQuantityChange && (
         <AppQuantityControl
           min={0}
           value={order.quantity}

@@ -1,14 +1,13 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { makeStyles } from '@rneui/base'
 import R from '@resource'
 import type { INavigator, IOrder, IProduct } from '@modal'
 import { AppButton, AppText } from '@uikit'
-import { numberWithCommas } from '@utils/index'
+import { getAppCode, numberWithCommas } from '@utils/index'
 import { useOrderContext } from '@hook/useOrderContext'
 import { FAB } from '@rneui/themed'
 import { getTotalAmount, updateOrderList } from '@utils/order'
-import ProductItemView from './ProductItemView'
 import Animated, {
   Layout,
   SlideInLeft,
@@ -16,22 +15,25 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import { useCreateOrders } from '@hook/userOrder'
-import { useNavigation } from '@react-navigation/native'
+import { useGetTransaction } from '@hook/userOrder'
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
+import ProductItemView from '@view/order/ProductItemView'
+import { RootStackParamList } from 'src/modal/navigator'
+import { LeftButton } from '@view/HeaderView'
+import OrderItemView from '@view/order/OrderItemView'
+import { useDidUpdateEffect } from '@hook/index'
 
 const useStyles = makeStyles(() => ({
   listContainer: {
-    paddingBottom: 150,
+    paddingBottom: 100,
   },
   container: {
     ...R.Styles.container,
-    minHeight: 200,
-    width: R.Dimens.MaxWidth,
-    borderRightColor: R.Colors.Border,
-    borderRightWidth: StyleSheet.hairlineWidth,
   },
   bottom: {
     ...R.Styles.bottom,
+    height: 80,
+    paddingBottom: 20,
   },
 
   bottomButton: {
@@ -52,35 +54,65 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 50,
     left: 20,
     zIndex: 10,
   },
 }))
 
-export default function OrderListView() {
+export default function OrderListScreen() {
   const styles = useStyles()
-  const createOrders = useCreateOrders()
   const navigation = useNavigation<INavigator.RootNavigationProp>()
-  const { orders, setOrders, scrollView, transaction } = useOrderContext()
-  const [loading, setLoading] = useState(false)
+  const route = useRoute<RouteProp<RootStackParamList, 'OrderList'>>()
+  const { transaction: transactionParam } = route.params
+  const [refreshing, setRefreshing] = useState(false)
+  const { data: transaction, refetch } = useGetTransaction(transactionParam?.id)
+  const isFocused = useIsFocused()
 
-  const onQuantityChange = (quantity: number, product: IProduct, order: IOrder) => {
-    setOrders(updateOrderList(transaction, orders, quantity, product, order))
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <LeftButton icon={'ic-cart'} onPress={onAddToCart} />,
+      title: transaction?.code ?? getAppCode('T', transaction?.id ?? 0),
+    })
+  }, [navigation, transaction])
+
+  useDidUpdateEffect(() => {
+    if (isFocused) {
+      refetch()
+    }
+  }, [isFocused])
+
+  const onAddToCart = () => {
+    if (transaction) {
+      navigation.navigate('AddOrder', { transaction })
+    }
   }
 
+  const orders = useMemo(() => {
+    if (transaction) {
+      return transaction.orders
+    } else {
+      return transactionParam.orders
+    }
+  }, [transactionParam, transaction])
+
   const onAddMorePress = () => {
-    // @ts-ignore
-    scrollView?.current?.scrollTo({ x: 0, animated: true })
+    if (transaction) {
+      navigation.navigate('AddOrder', { transaction })
+    }
+  }
+
+  const onRefresh = () => {
+    setRefreshing(true)
+    refetch().finally(() => {
+      setRefreshing(false)
+    })
   }
 
   const renderItem = ({ item }: { item: IOrder }) => {
-    if (!item?.product) {
-      return null
-    }
     return (
       <Animated.View layout={Layout.springify()} entering={SlideInLeft} exiting={SlideOutLeft}>
-        <ProductItemView product={item.product} order={item} onQuantityChange={onQuantityChange} />
+        <OrderItemView order={item} />
       </Animated.View>
     )
   }
@@ -91,23 +123,6 @@ export default function OrderListView() {
     ),
     [],
   )
-
-  const onCancelPress = () => {
-    navigation.goBack()
-  }
-  const onOrderPress = () => {
-    setLoading(true)
-    createOrders
-      .mutateAsync(orders)
-      .then((results) => {
-        if (results) {
-          navigation.goBack()
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
 
   return (
     <View style={styles.container}>
@@ -122,18 +137,16 @@ export default function OrderListView() {
         data={orders}
         contentContainerStyle={styles.listContainer}
         renderItem={renderItem}
-        keyExtractor={(item) => `order-item-${item?.product?.id}`}
+        keyExtractor={(item) => `order-item-${item?.id}`}
         CellRendererComponent={renderCell}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        showsVerticalScrollIndicator={false}
       />
       <View style={styles.bottom}>
         <View style={styles.amountView}>
           <AppText style={R.Styles.h5}>Amount: </AppText>
-          <AppText style={styles.amount}>{numberWithCommas(getTotalAmount(orders))}</AppText>
-        </View>
-
-        <View style={R.Styles.rowSpaceBetween}>
-          <AppButton title={'Cancel'} type={'destructive'} onPress={onCancelPress} />
-          <AppButton title={'Done'} type={'primary'} onPress={onOrderPress} loading={loading} />
+          <AppText style={styles.amount}>{numberWithCommas(getTotalAmount(orders ?? []))}</AppText>
         </View>
       </View>
     </View>

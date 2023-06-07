@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   iconRight: {
     position: 'absolute',
-    right: 10,
+    right: 20,
     justifyContent: 'center',
     alignItems: 'flex-end',
     width: '100%',
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   iconLeft: {
     position: 'absolute',
-    left: 10,
+    left: 20,
     justifyContent: 'center',
     alignItems: 'flex-start',
     zIndex: 2,

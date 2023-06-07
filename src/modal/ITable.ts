@@ -18,5 +18,5 @@ export default interface ITable {
   isDeleted?: boolean
   createDate?: Date
   updateDate?: Date
-  Transaction: ITransaction[]
+  transaction: ITransaction
 }

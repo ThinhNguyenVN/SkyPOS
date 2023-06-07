@@ -1,10 +1,13 @@
 import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import R from '@resource'
-import { AppText } from '@uikit'
+import { AppText, AppTouchable } from '@uikit'
 import { ITable } from '@modal'
 import { makeStyles } from '@rneui/themed'
 import { numberWithCommas } from '@utils/index'
+import { useNavigation } from '@react-navigation/native'
+import { RootNavigationProp } from 'src/modal/navigator'
+import moment from 'moment'
 const useStyles = makeStyles((theme, props: { haveTransaction?: boolean }) => ({
   item: {
     height: 60,
@@ -63,31 +66,50 @@ type TableItemViewProps = {
 
 export default function TableItemView({ item }: TableItemViewProps) {
   const styles = useStyles({ haveTransaction: true })
+  const navigation = useNavigation<RootNavigationProp>()
+  const onPressTransactionItem = () => {
+    if (item?.transaction?.id) {
+      navigation.navigate('TransactionDetail', { transactionId: item.transaction.id })
+    }
+  }
+  const onItemPress = () => {
+    if (item?.transaction?.id) {
+      navigation.navigate('TransactionDetail', { transactionId: item.transaction.id })
+    } else {
+      navigation.navigate('StartTransaction', { table: item })
+    }
+  }
   const renderTransactionView = () => {
     return (
-      <View style={styles.transaction}>
-        <AppText style={styles.amount}>{numberWithCommas(1600000)}</AppText>
+      <AppTouchable style={styles.transaction} onPress={onPressTransactionItem}>
+        <AppText style={styles.amount}>{numberWithCommas(item?.transaction?.totalAmount)}</AppText>
         <View style={styles.info}>
+          {!!item.transaction.startTime && (
+            <View style={styles.row}>
+              <AppText style={styles.iconText}>
+                {moment(item.transaction.startTime).format('HH:mm')}
+              </AppText>
+              <R.Icon name={'clock'} size={16} style={styles.icon} />
+            </View>
+          )}
+          {!!item.transaction.numberCustomer && (
+            <View style={styles.row}>
+              <AppText style={styles.iconText}>{item.transaction.numberCustomer}</AppText>
+              <R.Icon name={'users'} size={16} style={styles.icon} />
+            </View>
+          )}
           <View style={styles.row}>
-            <AppText style={styles.iconText}>16:00</AppText>
-            <R.Icon name={'clock'} size={16} style={styles.icon} />
-          </View>
-          <View style={styles.row}>
-            <AppText style={styles.iconText}>8</AppText>
-            <R.Icon name={'users'} size={16} style={styles.icon} />
-          </View>
-          <View style={styles.row}>
-            <AppText style={styles.iconText}>16</AppText>
+            <AppText style={styles.iconText}>{item.transaction.totalOrder ?? 0}</AppText>
             <R.Icon name={'clipboard'} size={16} style={styles.icon} />
           </View>
         </View>
-      </View>
+      </AppTouchable>
     )
   }
   return (
-    <View style={styles.item}>
+    <AppTouchable style={styles.item} onPress={onItemPress}>
       <AppText style={styles.tableName}>{item.name}</AppText>
-      {renderTransactionView()}
-    </View>
+      {!!item?.transaction && renderTransactionView()}
+    </AppTouchable>
   )
 }

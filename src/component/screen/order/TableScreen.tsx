@@ -1,11 +1,13 @@
 import { View, StyleSheet } from 'react-native'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { AppText } from '@uikit'
 import R from '@resource'
 import { useGetTableCategoryList } from '@hook/useTable'
 import { FlashList } from '@shopify/flash-list'
 import { ITable, ITableCategory } from '@modal'
 import TableItemView from '@view/order/TableItemView'
+import { useDidUpdateEffect } from '@hook/index'
+import { useIsFocused } from '@react-navigation/native'
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +31,22 @@ interface SectionType extends ITable {
 }
 
 export default function TableScreen() {
-  const { data: tableCategories } = useGetTableCategoryList()
+  const { data: tableCategories, refetch } = useGetTableCategoryList()
+  const [refreshing, setRefreshing] = useState(false)
+  const isFocused = useIsFocused()
+
+  useDidUpdateEffect(() => {
+    if (isFocused) {
+      refetch()
+    }
+  }, [isFocused])
+
+  const onRefresh = () => {
+    setRefreshing(true)
+    refetch().finally(() => {
+      setRefreshing(false)
+    })
+  }
 
   const sections = useMemo(() => {
     const arr: SectionType[] = []
@@ -65,6 +82,8 @@ export default function TableScreen() {
     <FlashList
       data={sections}
       contentContainerStyle={styles.container}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
       renderItem={({ item }) => {
         if (item.type === 'category') {
           return (

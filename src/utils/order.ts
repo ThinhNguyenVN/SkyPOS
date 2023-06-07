@@ -1,8 +1,10 @@
 import { IOrder, IProduct, ITransaction } from '@modal'
 import R from '@resource'
+import { ORDER_STATUS } from '@resource/Enums'
 
 export const calculateOrder = (order: IOrder, quantity: number, product?: IProduct): IOrder => {
   const productPrice = product?.price ?? 0
+  order.totalStandardPrice = quantity * (product?.standardPrice ?? 0)
   order.quantity = quantity
   order.totalPrice = quantity * productPrice
   order.amount = order.totalPrice - (order.discount?.value ?? 0) + (order.serviceCharge ?? 0)
@@ -43,5 +45,9 @@ export const updateOrderList = (
 }
 
 export const getTotalAmount = (orders: IOrder[]) => {
-  return orders.reduce((totalAmount, order) => totalAmount + (order?.amount ?? 0), 0)
+  return orders.reduce(
+    (totalAmount, order) =>
+      totalAmount + (order.status !== ORDER_STATUS[ORDER_STATUS.Canceled] ? order?.amount ?? 0 : 0),
+    0,
+  )
 }

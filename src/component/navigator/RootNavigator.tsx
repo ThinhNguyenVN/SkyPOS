@@ -12,6 +12,8 @@ import TabNavigator from './TabNavigator'
 import StartTransaction from '@screen/order/StartTransactionScreen'
 import AddOrder from '@screen/order/AddOrderScreen'
 import ChatScreen from '@screen/ChatScreen'
+import TransactionDetail from '@screen/order/TransactionDetailScreen'
+import OrderList from '@screen/order/OrderListScreen'
 import { Platform } from 'react-native'
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -95,8 +97,15 @@ function RootNavigator() {
         component={AddOrder}
         options={{
           title: 'Order',
+          headerLeft: () => <LeftButton icon={'ic-close'} />,
+          cardStyleInterpolator: Platform.select({
+            ios: CardStyleInterpolators.forVerticalIOS,
+            android: CardStyleInterpolators.forBottomSheetAndroid,
+          }),
         }}
       />
+      <Stack.Screen name="TransactionDetail" component={TransactionDetail} />
+      <Stack.Screen name="OrderList" component={OrderList} />
     </Stack.Navigator>
   )
 }
