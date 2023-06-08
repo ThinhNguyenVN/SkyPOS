@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import R from '@resource'
 import { makeStyles } from '@rneui/base'
@@ -6,11 +6,13 @@ import ListItemView from '@view/ListItemView'
 import { getAppCode, numberWithCommas } from '@utils/index'
 import { AppButton, AppText } from '@uikit'
 import { RefreshControl, View } from 'react-native'
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { RootNavigationProp, RootStackParamList } from 'src/modal/navigator'
 import { LeftButton } from '@view/HeaderView'
 import { useFinishTransaction, useGetTransaction } from '@hook/userOrder'
 import { ORDER_STATUS, PAYMENT_TYPE } from '@resource/Enums'
+import { AlertContext, PopupButtonProps } from '@container/AlertContainer'
+import { useDidUpdateEffect } from '@hook/index'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -60,6 +62,8 @@ export default function TransactionDetailScreen() {
   const [printLoading, setPrintLoading] = useState(false)
   const [cancelLoading, setCancelLoading] = useState(false)
   const finishTransaction = useFinishTransaction()
+  const isFocused = useIsFocused()
+  const { toast, popup } = useContext(AlertContext)
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -67,6 +71,12 @@ export default function TransactionDetailScreen() {
       title: transaction?.code ?? getAppCode('T', transaction?.id ?? 0),
     })
   }, [navigation, transaction])
+
+  useDidUpdateEffect(() => {
+    if (isFocused) {
+      refetch()
+    }
+  }, [isFocused])
 
   const onAddToCart = () => {
     if (transaction) {
@@ -96,19 +106,42 @@ export default function TransactionDetailScreen() {
       })
   }
   const onCancel = () => {
-    setCancelLoading(true)
-    const transactionParam = {
-      status: ORDER_STATUS[ORDER_STATUS.Canceled] as keyof typeof ORDER_STATUS,
-    }
-    finishTransaction
-      .mutateAsync({ id: transactionId, transaction: transactionParam })
-      .finally(() => {
-        setCancelLoading(false)
-        navigation.goBack()
-      })
+    const buttons: PopupButtonProps[] = [
+      {
+        label: 'Yes',
+        onPress: (): void => {
+          setCancelLoading(true)
+          const transactionParam = {
+            status: ORDER_STATUS[ORDER_STATUS.Canceled] as keyof typeof ORDER_STATUS,
+          }
+          finishTransaction
+            .mutateAsync({ id: transactionId, transaction: transactionParam })
+            .finally(() => {
+              setCancelLoading(false)
+              navigation.goBack()
+            })
+        },
+        type: 'destructive',
+      },
+      {
+        label: 'Cancel',
+        type: 'none',
+      },
+    ]
+
+    popup({
+      title: '',
+      message: 'Are you sure you want to cancel this transaction?',
+      icon: 'x',
+      buttons,
+      dontUseCancelButton: true,
+      buttonLayout: 'column',
+    })
   }
 
-  const onPrint = () => {}
+  const onPrint = () => {
+    toast({ msg: 'Printing ...', autoHide: true })
+  }
 
   const onOrdersPress = () => {
     if (transaction) {

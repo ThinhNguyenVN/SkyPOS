@@ -29,8 +29,10 @@ export default function StartTransactionScreen() {
   }
   return (
     <View style={styles.container}>
-      <AppInput label="Customer number" keyboardType="number-pad" />
       <AppInput label="Table" />
+      <AppInput label="Customer number" keyboardType="number-pad" />
+      <AppInput label="Customer name" />
+
       <View style={R.Styles.bottom}>
         <AppButton title={'Start Order'} size="large" type={'primary'} onPress={onOrderPress} />
       </View>

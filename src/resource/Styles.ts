@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   h4: {
     fontSize: 16,
     fontWeight: '400',
-    lineHeight: 24,
+    lineHeight: 18,
     color: Colors.TextColor,
   },
   h5: {

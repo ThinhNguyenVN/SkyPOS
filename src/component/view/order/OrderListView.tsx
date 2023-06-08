@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { makeStyles } from '@rneui/base'
@@ -18,7 +19,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useCreateOrders } from '@hook/userOrder'
 import { useNavigation } from '@react-navigation/native'
-
 const useStyles = makeStyles(() => ({
   listContainer: {
     paddingBottom: 150,
@@ -62,7 +62,7 @@ export default function OrderListView() {
   const styles = useStyles()
   const createOrders = useCreateOrders()
   const navigation = useNavigation<INavigator.RootNavigationProp>()
-  const { orders, setOrders, scrollView, transaction } = useOrderContext()
+  const { orders, setOrders, scrollView, transaction, setHasChange } = useOrderContext()
   const [loading, setLoading] = useState(false)
 
   const onQuantityChange = (quantity: number, product: IProduct, order: IOrder) => {
@@ -101,7 +101,10 @@ export default function OrderListView() {
       .mutateAsync(orders)
       .then((results) => {
         if (results) {
-          navigation.goBack()
+          setHasChange &&
+            setHasChange(false, () => {
+              navigation.goBack()
+            })
         }
       })
       .finally(() => {
@@ -133,7 +136,13 @@ export default function OrderListView() {
 
         <View style={R.Styles.rowSpaceBetween}>
           <AppButton title={'Cancel'} type={'destructive'} onPress={onCancelPress} />
-          <AppButton title={'Done'} type={'primary'} onPress={onOrderPress} loading={loading} />
+          <AppButton
+            title={'Done'}
+            type={'primary'}
+            onPress={onOrderPress}
+            loading={loading}
+            disabled={!orders?.length}
+          />
         </View>
       </View>
     </View>

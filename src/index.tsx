@@ -4,6 +4,8 @@ import RootNavigator from './component/navigator/RootNavigator'
 import RNBootSplash from 'react-native-bootsplash'
 import { Host } from 'react-native-portalize'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import AlertContainer from '@container/AlertContainer'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 const queryClient = new QueryClient()
 
@@ -13,11 +15,15 @@ function App(): JSX.Element {
   })
   return (
     <QueryClientProvider client={queryClient}>
-      <Host>
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-      </Host>
+      <SafeAreaProvider>
+        <AlertContainer>
+          <Host>
+            <NavigationContainer>
+              <RootNavigator />
+            </NavigationContainer>
+          </Host>
+        </AlertContainer>
+      </SafeAreaProvider>
     </QueryClientProvider>
   )
 }

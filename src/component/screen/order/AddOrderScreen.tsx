@@ -1,5 +1,4 @@
-import { View } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ProductCategoryListView from '@view/order/ProductCategoryListView'
 import R from '@resource'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -10,6 +9,7 @@ import { OrderContext } from '@hook/useOrderContext'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { RootStackParamList } from 'src/modal/navigator'
 import OrderListView from '@view/order/OrderListView'
+import useConfirmGoBack from '@hook/useConfirmGoBack'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -19,12 +19,17 @@ const useStyles = makeStyles(() => ({
 }))
 
 export default function AddOrderScreen() {
+  const { setHasChange } = useConfirmGoBack()
   const styles = useStyles()
   const [selectedProductCategory, setSelectedProductCategory] = useState<IProductCategory>()
   const [orders, setOrders] = useState<IOrder[]>([])
   const scrollRef = useRef<ScrollView>(null)
   const route = useRoute<RouteProp<RootStackParamList, 'AddOrder'>>()
   const { transaction } = route.params
+
+  useEffect(() => {
+    setHasChange(!!orders.length)
+  }, [orders])
 
   return (
     <OrderContext.Provider
@@ -35,6 +40,7 @@ export default function AddOrderScreen() {
         setSelectedProductCategory,
         transaction,
         scrollView: scrollRef,
+        setHasChange,
       }}
     >
       <ScrollView

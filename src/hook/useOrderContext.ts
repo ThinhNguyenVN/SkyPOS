@@ -9,6 +9,7 @@ export type OrderContextType = {
   selectedProductCategory?: IProductCategory
   setSelectedProductCategory?: (selector: IProductCategory) => void
   scrollView?: Ref<ScrollView>
+  setHasChange?: (hasChange: boolean, cb?: () => void) => void
 }
 
 const initContext = {
@@ -17,6 +18,7 @@ const initContext = {
   selectedProductCategory: undefined,
   setOrders: () => {},
   scrollView: undefined,
+  setHasChange: () => {},
 }
 
 export const OrderContext = createContext<OrderContextType>(initContext)
