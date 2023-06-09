@@ -4,6 +4,7 @@ import {
   getTransaction,
   updateOrder,
   finishTransaction,
+  updateTransaction,
 } from '@api/index'
 import type { IOrder, ITransaction } from '@modal'
 
@@ -17,6 +18,15 @@ export const useCreateTransaction = (): UseMutationResult<
   unknown
 > => {
   return useMutation(createTransaction)
+}
+
+export const useUpdateTransaction = (): UseMutationResult<
+  ITransaction,
+  AxiosError,
+  { transaction: ITransaction; id: number },
+  unknown
+> => {
+  return useMutation(updateTransaction)
 }
 
 export const useCreateOrders = (): UseMutationResult<IOrder[], AxiosError, IOrder[], unknown> => {

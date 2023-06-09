@@ -19,13 +19,27 @@ export const getTableList = async (): Promise<ITable[]> => {
   return res.data
 }
 
-export const getTableCategoryList = async (): Promise<ITableCategory[]> => {
+export const getTableCategoryList = async (): Promise<{
+  categories: ITableCategory[]
+  takeawayTransactions: ITransaction[]
+}> => {
   const res = await api.get('/tables/categories/').then((res) => res.data)
   return res.data
 }
 
 export const createTransaction = async (transaction: ITransaction): Promise<ITransaction> => {
   const res = await api.post('/transactions/', transaction).then((res) => res.data)
+  return res.data
+}
+
+export const updateTransaction = async ({
+  transaction,
+  id,
+}: {
+  transaction: ITransaction
+  id: number
+}): Promise<ITransaction> => {
+  const res = await api.put(`/transactions/${id}`, transaction).then((res) => res.data)
   return res.data
 }
 

@@ -100,3 +100,8 @@ export enum ORDER_STATUS {
   Canceled,
   Completed,
 }
+
+export enum COST_TYPE {
+  Percent,
+  Amount,
+}

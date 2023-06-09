@@ -1,4 +1,4 @@
-import { PAYMENT_TYPE, ORDER_STATUS } from '@resource/Enums'
+import { PAYMENT_TYPE, ORDER_STATUS, COST_TYPE } from '@resource/Enums'
 import IDiscount from './IDiscount'
 import IUser from './IUser'
 import ITable from './ITable'
@@ -19,8 +19,12 @@ export default interface Transaction {
   totalOrder?: number
   discountId?: number
   discount?: IDiscount
-  tableCharge?: number
-  serviceCharge?: number
+  discountValue?: number
+  discountType?: keyof typeof COST_TYPE
+  tableChargeValue?: number
+  tableChargeType?: keyof typeof COST_TYPE
+  serviceChargeValue?: number
+  serviceChargeType?: keyof typeof COST_TYPE
   taxRate?: number
   totalAmount?: number
   totalProductSellingPrice?: number

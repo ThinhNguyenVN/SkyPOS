@@ -1,18 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import R from '@resource'
 import { makeStyles } from '@rneui/base'
 import ListItemView from '@view/ListItemView'
 import { getAppCode, numberWithCommas } from '@utils/index'
-import { AppButton, AppText } from '@uikit'
+import { AppButton, AppCurrencyInput, AppInput, AppSelectInput, AppText } from '@uikit'
 import { RefreshControl, View } from 'react-native'
 import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { RootNavigationProp, RootStackParamList } from 'src/modal/navigator'
 import { LeftButton } from '@view/HeaderView'
-import { useFinishTransaction, useGetTransaction } from '@hook/userOrder'
+import { useFinishTransaction, useGetTransaction, useUpdateTransaction } from '@hook/userOrder'
 import { ORDER_STATUS, PAYMENT_TYPE } from '@resource/Enums'
 import { AlertContext, PopupButtonProps } from '@container/AlertContainer'
 import { useDidUpdateEffect } from '@hook/index'
+import BottomSheetInputView, { BottomSheetInputViewRefType } from '@view/BottomSheetInputView'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -56,14 +57,19 @@ export default function TransactionDetailScreen() {
   const navigation = useNavigation<RootNavigationProp>()
   const route = useRoute<RouteProp<RootStackParamList, 'TransactionDetail'>>()
   const { transactionId } = route.params
-  const { data: transaction, refetch } = useGetTransaction(transactionId)
+  const { data, refetch } = useGetTransaction(transactionId)
   const [refreshing, setRefreshing] = useState(false)
   const [finishLoading, setFinishLoading] = useState(false)
   const [printLoading, setPrintLoading] = useState(false)
   const [cancelLoading, setCancelLoading] = useState(false)
   const finishTransaction = useFinishTransaction()
+  const updateTransaction = useUpdateTransaction()
   const isFocused = useIsFocused()
   const { toast, popup } = useContext(AlertContext)
+  const customerNameInputRef = useRef<BottomSheetInputViewRefType>(null)
+  const customerNumberInputRef = useRef<BottomSheetInputViewRefType>(null)
+  const serviceChargeInputRef = useRef<BottomSheetInputViewRefType>(null)
+  const [transaction, setTransaction] = useState(data)
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -71,6 +77,10 @@ export default function TransactionDetailScreen() {
       title: transaction?.code ?? getAppCode('T', transaction?.id ?? 0),
     })
   }, [navigation, transaction])
+
+  useDidUpdateEffect(() => {
+    setTransaction(data)
+  }, [data])
 
   useDidUpdateEffect(() => {
     if (isFocused) {
@@ -149,6 +159,81 @@ export default function TransactionDetailScreen() {
     }
   }
 
+  const renderEditCustomerNameForm = () => (
+    <BottomSheetInputView
+      ref={customerNameInputRef}
+      title={'Update Customer name'}
+      onChangeValue={(value) => {
+        updateTransaction
+          .mutateAsync({ transaction: { customerName: value }, id: transactionId })
+          .then((result) => {
+            setTransaction(result)
+          })
+      }}
+      renderInput={() => (
+        <AppInput
+          label="Customer name"
+          value={transaction?.customerName}
+          placeholder="Please enter customer name"
+          onChangeText={(value) => {
+            const enable = value && value != transaction?.customerName
+            customerNameInputRef.current?.setValue(enable ? value : '')
+          }}
+        />
+      )}
+    />
+  )
+  const renderEditCustomerNumberForm = () => (
+    <BottomSheetInputView
+      ref={customerNumberInputRef}
+      title={'Update number of customers'}
+      onChangeValue={(value) => {
+        updateTransaction
+          .mutateAsync({ transaction: { numberCustomer: parseInt(value) }, id: transactionId })
+          .then((result) => {
+            setTransaction(result)
+          })
+      }}
+      renderInput={() => (
+        <AppInput
+          label="Number of customers"
+          keyboardType={'number-pad'}
+          selectTextOnFocus
+          value={transaction?.numberCustomer?.toString()}
+          placeholder="Please enter customer number"
+          onChangeText={(value) => {
+            console.log('value change : ', value, transaction?.numberCustomer)
+            const enable = value && parseInt(value) !== transaction?.numberCustomer
+            customerNumberInputRef.current?.setValue(enable ? value : '')
+          }}
+        />
+      )}
+    />
+  )
+
+  const renderServiceChargeForm = () => (
+    <BottomSheetInputView
+      ref={serviceChargeInputRef}
+      title={'Update service charge'}
+      onChangeValue={(value) => {}}
+      renderInput={() => (
+        <View>
+          <AppCurrencyInput
+            label="Value"
+            keyboardType={'number-pad'}
+            selectTextOnFocus
+            value={transaction?.numberCustomer?.toString()}
+            onChangeText={(value) => {
+              console.log('value change : ', value, transaction?.numberCustomer)
+              const enable = value && parseInt(value) !== transaction?.numberCustomer
+              serviceChargeInputRef.current?.setValue(enable ? value : '')
+            }}
+          />
+        </View>
+      )}
+    />
+  )
+
   return (
     <ScrollView
       style={styles.container}
@@ -156,13 +241,21 @@ export default function TransactionDetailScreen() {
     >
       <ListItemView
         sectionTitle={'Table Information'}
-        label={transaction?.table?.category?.name ?? ''}
-        text={transaction?.table?.name ?? ''}
+        label={transaction?.table?.category?.name ?? 'Take away'}
+        text={transaction?.table?.name ?? `TA-${transaction?.id}`}
         readOnly
       />
 
-      <ListItemView label={'Customer name'} text={transaction?.customerName} />
-      <ListItemView label={'Customer number'} text={transaction?.numberCustomer?.toString()} />
+      <ListItemView
+        label={'Customer name'}
+        text={transaction?.customerName}
+        onPress={customerNameInputRef.current?.open}
+      />
+      <ListItemView
+        label={'Customer number'}
+        text={transaction?.numberCustomer?.toString()}
+        onPress={customerNumberInputRef.current?.open}
+      />
       <ListItemView
         sectionTitle={'Order Information'}
         label={
@@ -178,12 +271,15 @@ export default function TransactionDetailScreen() {
 
       <ListItemView
         label={'Service Charge'}
-        text={numberWithCommas(transaction?.serviceCharge)}
+        text={numberWithCommas(transaction?.serviceChargeValue)}
         textStyle={{ color: R.Colors.Green }}
+        onPress={serviceChargeInputRef.current?.open}
       />
       <ListItemView
         label={'Discount'}
-        text={numberWithCommas(transaction?.discount?.value)}
+        text={numberWithCommas(
+          transaction?.discount ? transaction?.discount?.value : transaction?.discountValue,
+        )}
         textStyle={{ color: R.Colors.Red }}
       />
       {!!transaction?.taxRate && (
@@ -233,6 +329,9 @@ export default function TransactionDetailScreen() {
           onPress={onCancel}
         />
       </View>
+      {renderEditCustomerNameForm()}
+      {renderEditCustomerNumberForm()}
+      {renderServiceChargeForm()}
     </ScrollView>
   )
 }

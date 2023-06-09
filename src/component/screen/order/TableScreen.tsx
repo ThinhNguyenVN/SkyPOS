@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import React, { useMemo, useState } from 'react'
+import React, { useId, useMemo, useState } from 'react'
 import { AppText } from '@uikit'
 import R from '@resource'
 import { useGetTableCategoryList } from '@hook/useTable'
@@ -31,9 +31,15 @@ interface SectionType extends ITable {
 }
 
 export default function TableScreen() {
-  const { data: tableCategories, refetch } = useGetTableCategoryList()
+  const { data, refetch } = useGetTableCategoryList()
   const [refreshing, setRefreshing] = useState(false)
   const isFocused = useIsFocused()
+  const uid = useId()
+
+  const tableCategories = useMemo(() => {
+    return data?.categories || []
+  }, [data?.categories])
+  const takeawayTransactions = data?.takeawayTransactions || []
 
   useDidUpdateEffect(() => {
     if (isFocused) {
@@ -52,10 +58,12 @@ export default function TableScreen() {
     const arr: SectionType[] = []
     if (tableCategories?.length) {
       tableCategories?.forEach((category) => {
-        arr.push({
-          type: 'category',
-          data: category,
-        } as SectionType)
+        if (!!category.tables?.length) {
+          arr.push({
+            type: 'category',
+            data: category,
+          } as SectionType)
+        }
 
         if (category.tables?.length) {
           category.tables?.forEach((i) => {
@@ -64,9 +72,22 @@ export default function TableScreen() {
         }
       })
     }
-
+    if (takeawayTransactions?.length) {
+      const takeaway: SectionType = {
+        type: 'category',
+        data: { name: 'Take away' },
+      }
+      arr.push(takeaway)
+      takeawayTransactions?.forEach((i) => {
+        const table: ITable = {
+          name: `TA-${i.id}`,
+          transaction: i,
+        }
+        arr.push(table)
+      })
+    }
     return arr
-  }, [tableCategories])
+  }, [tableCategories, takeawayTransactions])
 
   const stickyHeaderIndices = sections
     ?.map((item, index) => {

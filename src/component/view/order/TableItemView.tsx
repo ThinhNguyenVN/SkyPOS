@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme, props: { haveTransaction?: boolean }) => ({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingLeft: 10,
   },
   info: {
@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme, props: { haveTransaction?: boolean }) => ({
   },
   iconText: {
     ...R.Styles.h4,
+    lineHeight: 19,
   },
 }))
 
@@ -84,7 +85,7 @@ export default function TableItemView({ item }: TableItemViewProps) {
       <AppTouchable style={styles.transaction} onPress={onPressTransactionItem}>
         <AppText style={styles.amount}>{numberWithCommas(item?.transaction?.totalAmount)}</AppText>
         <View style={styles.info}>
-          {!!item.transaction.startTime && (
+          {!!item?.transaction?.startTime && (
             <View style={styles.row}>
               <AppText style={styles.iconText}>
                 {moment(item.transaction.startTime).format('HH:mm')}
@@ -92,14 +93,14 @@ export default function TableItemView({ item }: TableItemViewProps) {
               <R.Icon name={'clock'} size={16} style={styles.icon} />
             </View>
           )}
-          {!!item.transaction.numberCustomer && (
+          {!!item?.transaction?.numberCustomer && (
             <View style={styles.row}>
               <AppText style={styles.iconText}>{item.transaction.numberCustomer}</AppText>
               <R.Icon name={'users'} size={16} style={styles.icon} />
             </View>
           )}
           <View style={styles.row}>
-            <AppText style={styles.iconText}>{item.transaction.totalOrder ?? 0}</AppText>
+            <AppText style={styles.iconText}>{item?.transaction?.totalOrder ?? 0}</AppText>
             <R.Icon name={'clipboard'} size={16} style={styles.icon} />
           </View>
         </View>

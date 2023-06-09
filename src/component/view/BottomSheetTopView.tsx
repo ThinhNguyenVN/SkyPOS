@@ -41,7 +41,7 @@ const BottomSheetTopView = ({
         </AppTouchable>
       )}
 
-      <AppText style={R.Styles.h3} text={title} />
+      <AppText style={R.Styles.h4Bold} text={title} />
       {!onRightButtonPress || !iconRight ? (
         <View style={{ width: 24 }} />
       ) : (

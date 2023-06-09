@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useImperativeHandle, useMemo } from 'react'
+import React, { useEffect, useRef, useState, useImperativeHandle, useMemo, Ref } from 'react'
 import { StyleSheet, ViewStyle, TextInput, View, Platform } from 'react-native'
 import R from '../resource'
 import { Input, InputProps } from '@rneui/themed'
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   disableInput: { color: R.Colors.TextColor, backgroundColor: '#FAFAFA', borderColor: '#FAFAFA' },
 })
 
-interface AppInputProps
+export interface AppInputProps
   extends Omit<InputProps, 'onChangeText' | 'autoCompleteType' | 'onEndEditing' | 'ref'> {
   label?: string
   icon?: string
@@ -59,6 +59,14 @@ interface AppInputProps
   countLength?: boolean
   maxLength?: number
   validate?: any
+}
+
+export type AppInputRef = {
+  validate: () => void
+  focus: () => void
+  clear: () => void
+  blur: () => void
+  isFocused: () => void
 }
 
 const AppInput = React.forwardRef(
@@ -77,7 +85,7 @@ const AppInput = React.forwardRef(
       validate,
       ...props
     }: AppInputProps,
-    ref,
+    ref: Ref<AppInputRef>,
   ) => {
     const inputRef = useRef<TextInput>(null)
     const [value, setValue] = useState(props.value)
@@ -168,7 +176,7 @@ const AppInput = React.forwardRef(
 
     const textLength = `${value?.length?.toString() || '0'} ${maxLength ? '/' + maxLength : ''}`
     return (
-      <View>
+      <View style={containerStyle}>
         {/* @ts-ignore */}
         <Input
           ref={inputRef}
@@ -186,13 +194,9 @@ const AppInput = React.forwardRef(
               />
             )
           }
-          containerStyle={[
-            styles.containerStyle,
-            {
-              flex: width ? 1 : 0,
-            },
-            containerStyle || {},
-          ]}
+          containerStyle={{
+            flex: width ? 1 : 0,
+          }}
           inputStyle={{
             textAlignVertical: 'top',
             paddingBottom: Platform.OS === 'android' ? 6 : undefined,
