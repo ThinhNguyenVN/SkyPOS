@@ -59,6 +59,11 @@ export const updateOrder = async ({
   return res.data
 }
 
+export const getOrders = async (): Promise<IOrder[]> => {
+  const res = await api.get(`/orders/`).then((res) => res.data)
+  return res.data
+}
+
 export const finishTransaction = async ({
   transaction,
   id,

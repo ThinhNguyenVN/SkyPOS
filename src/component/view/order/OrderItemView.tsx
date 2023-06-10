@@ -11,6 +11,7 @@ import { ORDER_STATUS } from '@resource/Enums'
 
 type OrderItemViewProps = {
   order: IOrder
+  tableName?: string
 }
 
 const ItemSize = 80
@@ -104,12 +105,14 @@ const styles = StyleSheet.create({
   },
 })
 
-const OrderItemView = ({ order }: OrderItemViewProps): JSX.Element => {
+const OrderItemView = ({ order, tableName }: OrderItemViewProps): JSX.Element => {
   const updateOrder = useUpdateOrder()
   const [loading, setLoading] = useState(false)
   const renderInfo = () => {
     return (
       <View style={styles.productInfo}>
+        {!!tableName && <AppText style={styles.productName} text={tableName} />}
+
         <AppText style={styles.productName} numberOfLines={2}>
           {order.product?.name}
         </AppText>
@@ -175,6 +178,7 @@ const OrderItemView = ({ order }: OrderItemViewProps): JSX.Element => {
         {order.status === ORDER_STATUS[ORDER_STATUS.Completed] && (
           <View style={[styles.overlay, { backgroundColor: R.Colors.Green }]} />
         )}
+
         <AppText
           text={order?.quantity?.toString()}
           style={styles.quantity}

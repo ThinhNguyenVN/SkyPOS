@@ -1,10 +1,11 @@
 import { View, StyleSheet } from 'react-native'
-import React, { Ref, forwardRef, useImperativeHandle, useState } from 'react'
+import React, { Ref, forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import R from '@resource'
 import Modal from 'react-native-modal'
 import { AppButton, AppInput, AppSelectInput, AppText, AppTouchable, SelectItemType } from '@uikit'
 import { PAYMENT_TYPE } from '@resource/Enums'
 import * as yup from 'yup'
+import { numberWithCommas } from '@utils/index'
 
 const ContentWidth = R.Dimens.MaxWidth - 2 * R.Dimens.MarginLarge
 
@@ -46,17 +47,16 @@ const styles = StyleSheet.create({
     paddingTop: 32,
   },
   alertPopupMessage: {
-    color: '#323F4B',
-    fontSize: 16,
+    color: R.Colors.Green,
+    fontSize: 18,
     lineHeight: 24,
     textAlign: 'center',
-    fontFamily: R.Fonts.Regular,
-    fontWeight: '500',
+    fontFamily: R.Fonts.Bold,
+    marginBottom: 16,
   },
   alertPopupTitle: {
     color: '#323F4B',
     fontSize: 20,
-    marginBottom: 16,
     textAlign: 'center',
     fontFamily: R.Fonts.Bold,
   },
@@ -86,7 +86,7 @@ const ConfirmFinishTransactionPopup = forwardRef(
     const [loading, setLoading] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState(data[0].value)
-    const [cashAmount, setCashAmount] = useState(0)
+    const [cashAmount, setCashAmount] = useState(totalAmount)
     useImperativeHandle(ref, () => ({
       open() {
         setIsVisible(true)
@@ -95,6 +95,10 @@ const ConfirmFinishTransactionPopup = forwardRef(
         setIsVisible(false)
       },
     }))
+
+    useEffect(() => {
+      setCashAmount(totalAmount)
+    }, [totalAmount])
 
     const onFinishPress = () => {
       setLoading(true)
@@ -114,6 +118,7 @@ const ConfirmFinishTransactionPopup = forwardRef(
         <View style={styles.alertPopup}>
           <View style={styles.alertPopupContent}>
             <AppText style={styles.alertPopupTitle} text={'Finish transaction'} />
+            <AppText style={styles.alertPopupMessage} text={numberWithCommas(totalAmount)} />
             <AppSelectInput
               label={'Payment method'}
               data={data}
@@ -125,7 +130,7 @@ const ConfirmFinishTransactionPopup = forwardRef(
                 label={'Cash'}
                 inputType="currency"
                 keyboardType="number-pad"
-                value={cashAmount.toString()}
+                value={numberWithCommas(cashAmount)}
                 selectTextOnFocus
                 onChangeText={onChangeCash}
               />

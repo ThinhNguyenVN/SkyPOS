@@ -1,4 +1,4 @@
-import { IChargeAmount } from '@modal'
+import { IChargeAmount, ITransaction } from '@modal'
 import R from '@resource'
 import { COST_TYPE } from '@resource/Enums'
 import currency from 'currency.js'
@@ -50,4 +50,11 @@ export function getChargeAmount(charge: IChargeAmount, total: number) {
       ? `% (${numberWithCommas((charge.value * total) / 100)})`
       : ''
   }`
+}
+
+export function getTakeoutName(transaction?: ITransaction) {
+  if (!transaction) {
+    return null
+  }
+  return `TA-${transaction.id}`
 }

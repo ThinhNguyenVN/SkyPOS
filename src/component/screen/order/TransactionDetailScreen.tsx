@@ -115,10 +115,12 @@ export default function TransactionDetailScreen() {
     finishTransaction
       .mutateAsync({ id: transactionId, transaction: transactionParam })
       .then(() => {
-        navigation.goBack()
+        callback()
+        setTimeout(() => {
+          navigation.goBack()
+        }, 500)
       })
       .finally(() => {
-        callback()
         setFinishLoading(false)
       })
   }
