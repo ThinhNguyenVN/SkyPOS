@@ -171,7 +171,12 @@ const OrderItemView = ({ order, tableName }: OrderItemViewProps): JSX.Element =>
       containerStyle={styles.productItem}
       bottomDivider
       rightStyle={styles.rightMenu}
-      rightContent={renderRightMenu}
+      rightContent={
+        order.status === ORDER_STATUS[ORDER_STATUS.Canceled] ||
+        order.status === ORDER_STATUS[ORDER_STATUS.Completed]
+          ? null
+          : renderRightMenu
+      }
     >
       <View style={styles.productView}>
         {order.status === ORDER_STATUS[ORDER_STATUS.Canceled] && <View style={styles.overlay} />}

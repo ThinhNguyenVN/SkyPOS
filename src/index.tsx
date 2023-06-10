@@ -6,6 +6,7 @@ import { Host } from 'react-native-portalize'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import AlertContainer from '@container/AlertContainer'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { StatusBar } from 'react-native'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +20,7 @@ function App(): JSX.Element {
         <AlertContainer>
           <Host>
             <NavigationContainer>
+              <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
               <RootNavigator />
             </NavigationContainer>
           </Host>
