@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import React, { ReactNode } from 'react'
+import React from 'react'
 import R from '../../resource'
 import { AppText, AppTouchable } from '../../uikit'
 

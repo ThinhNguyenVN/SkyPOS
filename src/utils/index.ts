@@ -1,6 +1,7 @@
+import { IChargeAmount } from '@modal'
 import R from '@resource'
+import { COST_TYPE } from '@resource/Enums'
 import currency from 'currency.js'
-import moment from 'moment'
 
 export const formatCurrency = (
   value: number,
@@ -41,4 +42,12 @@ export function validUrl(path: string | undefined) {
 
 export function getAppCode(refix: string, id: number | string) {
   return `${refix}${id?.toString().padStart(5, '0')}`
+}
+
+export function getChargeAmount(charge: IChargeAmount, total: number) {
+  return `${numberWithCommas(charge?.value)}${
+    charge?.type === COST_TYPE[COST_TYPE.Percent]
+      ? `% (${numberWithCommas((charge.value * total) / 100)})`
+      : ''
+  }`
 }

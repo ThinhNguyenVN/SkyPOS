@@ -4,6 +4,7 @@ import R from '../resource'
 import { Input, InputProps } from '@rneui/themed'
 import AppText from './AppText'
 import * as yup from 'yup'
+import { numberWithCommas } from '@utils/index'
 
 const styles = StyleSheet.create({
   h2: {
@@ -59,6 +60,7 @@ export interface AppInputProps
   countLength?: boolean
   maxLength?: number
   validate?: any
+  inputType?: 'text' | 'number' | 'currency' | undefined
 }
 
 export type AppInputRef = {
@@ -83,6 +85,7 @@ const AppInput = React.forwardRef(
       countLength,
       maxLength,
       validate,
+      inputType = 'text',
       ...props
     }: AppInputProps,
     ref: Ref<AppInputRef>,
@@ -153,7 +156,12 @@ const AppInput = React.forwardRef(
       if (maxLength && text.length > maxLength) {
         return
       }
-      const inputValue = text
+      let inputValue = text
+      if (inputType === 'number') {
+        inputValue = text.replace(/[^0-9]/g, '')
+      } else if (inputType === 'currency') {
+        inputValue = numberWithCommas(text.replace(/[^0-9]/g, ''))
+      }
 
       setValue(inputValue)
       if (onChangeText) {
@@ -216,7 +224,7 @@ const AppInput = React.forwardRef(
           leftIconContainerStyle={styles.leftIconContainer}
           onPressIn={onPressIn}
           onBlur={onBlur}
-          errorMessage={focused && !props.disabled ? '' : error || props.error}
+          errorMessage={error || props.error}
           autoCapitalize={'none'}
           maxLength={maxLength}
           {...props}

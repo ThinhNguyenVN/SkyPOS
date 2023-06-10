@@ -38,7 +38,6 @@ export default function AppTouchable(props: AppTouchableProps): JSX.Element {
 
   return (
     <Touchable
-      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       {...others}
       // @ts-ignore: Unreachable code error
       onPress={pressHandle}

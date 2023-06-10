@@ -68,8 +68,6 @@ export default function StartTransactionScreen() {
     return tables
   }, [tableCategories])
 
-  console.log('selected table id : ', selectedTableId)
-
   return (
     <View style={styles.container}>
       <AppSelectInput

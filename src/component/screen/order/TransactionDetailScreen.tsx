@@ -3,17 +3,19 @@ import { ScrollView } from 'react-native-gesture-handler'
 import R from '@resource'
 import { makeStyles } from '@rneui/base'
 import ListItemView from '@view/ListItemView'
-import { getAppCode, numberWithCommas } from '@utils/index'
-import { AppButton, AppCurrencyInput, AppInput, AppSelectInput, AppText } from '@uikit'
+import { getAppCode, getChargeAmount, numberWithCommas } from '@utils/index'
+import { AppButton, AppChargeValueInput, AppInput, AppText } from '@uikit'
 import { RefreshControl, View } from 'react-native'
 import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { RootNavigationProp, RootStackParamList } from 'src/modal/navigator'
 import { LeftButton } from '@view/HeaderView'
 import { useFinishTransaction, useGetTransaction, useUpdateTransaction } from '@hook/userOrder'
-import { ORDER_STATUS, PAYMENT_TYPE } from '@resource/Enums'
+import { COST_TYPE, ORDER_STATUS, PAYMENT_TYPE } from '@resource/Enums'
 import { AlertContext, PopupButtonProps } from '@container/AlertContainer'
 import { useDidUpdateEffect } from '@hook/index'
 import BottomSheetInputView, { BottomSheetInputViewRefType } from '@view/BottomSheetInputView'
+import { IChargeAmount } from '@modal'
+import ConfirmFinishTransactionPopup, { FinishPopupRefType } from './ConfirmFinishTransactionPopup'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -69,7 +71,9 @@ export default function TransactionDetailScreen() {
   const customerNameInputRef = useRef<BottomSheetInputViewRefType>(null)
   const customerNumberInputRef = useRef<BottomSheetInputViewRefType>(null)
   const serviceChargeInputRef = useRef<BottomSheetInputViewRefType>(null)
+  const discountInputRef = useRef<BottomSheetInputViewRefType>(null)
   const [transaction, setTransaction] = useState(data)
+  const finishPopupRef = useRef<FinishPopupRefType>(null)
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -101,18 +105,21 @@ export default function TransactionDetailScreen() {
     })
   }
 
-  const onFinish = () => {
+  const onFinish = (callback: () => void, paymentMethod: string, cash: number) => {
     setFinishLoading(true)
     const transactionParam = {
       status: ORDER_STATUS[ORDER_STATUS.Completed] as keyof typeof ORDER_STATUS,
-      paymentType: PAYMENT_TYPE[PAYMENT_TYPE.Cash] as keyof typeof PAYMENT_TYPE,
-      customerCash: transaction?.totalAmount,
+      paymentType: paymentMethod as keyof typeof PAYMENT_TYPE,
+      customerCash: cash,
     }
     finishTransaction
       .mutateAsync({ id: transactionId, transaction: transactionParam })
-      .finally(() => {
-        setFinishLoading(false)
+      .then(() => {
         navigation.goBack()
+      })
+      .finally(() => {
+        callback()
+        setFinishLoading(false)
       })
   }
   const onCancel = () => {
@@ -165,7 +172,7 @@ export default function TransactionDetailScreen() {
       title={'Update Customer name'}
       onChangeValue={(value) => {
         updateTransaction
-          .mutateAsync({ transaction: { customerName: value }, id: transactionId })
+          .mutateAsync({ transaction: { customerName: value as string }, id: transactionId })
           .then((result) => {
             setTransaction(result)
           })
@@ -189,7 +196,10 @@ export default function TransactionDetailScreen() {
       title={'Update number of customers'}
       onChangeValue={(value) => {
         updateTransaction
-          .mutateAsync({ transaction: { numberCustomer: parseInt(value) }, id: transactionId })
+          .mutateAsync({
+            transaction: { numberCustomer: parseInt(value as string) },
+            id: transactionId,
+          })
           .then((result) => {
             setTransaction(result)
           })
@@ -202,7 +212,6 @@ export default function TransactionDetailScreen() {
           value={transaction?.numberCustomer?.toString()}
           placeholder="Please enter customer number"
           onChangeText={(value) => {
-            console.log('value change : ', value, transaction?.numberCustomer)
             const enable = value && parseInt(value) !== transaction?.numberCustomer
             customerNumberInputRef.current?.setValue(enable ? value : '')
           }}
@@ -215,27 +224,79 @@ export default function TransactionDetailScreen() {
     <BottomSheetInputView
       ref={serviceChargeInputRef}
       title={'Update service charge'}
-      onChangeValue={(value) => {}}
+      onChangeValue={(charge) => {
+        const chargeObject = charge as IChargeAmount
+        updateTransaction
+          .mutateAsync({
+            transaction: {
+              serviceChargeType: chargeObject.type as keyof typeof COST_TYPE,
+              serviceChargeValue: chargeObject.value,
+            },
+            id: transactionId,
+          })
+          .then((result) => {
+            setTransaction(result)
+          })
+      }}
       renderInput={() => (
-        <View>
-          <AppCurrencyInput
-            label="Value"
-            keyboardType={'number-pad'}
-            selectTextOnFocus
-            value={transaction?.numberCustomer?.toString()}
-            onChangeText={(value) => {
-              console.log('value change : ', value, transaction?.numberCustomer)
-              const enable = value && parseInt(value) !== transaction?.numberCustomer
-              serviceChargeInputRef.current?.setValue(enable ? value : '')
-            }}
-          />
-        </View>
+        <AppChargeValueInput
+          label={'Service charge'}
+          maxValue={transaction?.totalProductSellingPrice}
+          selectTextOnFocus
+          value={transaction?.serviceChargeValue}
+          type={transaction?.serviceChargeType}
+          onChanged={(charge) => {
+            const enable =
+              !!charge &&
+              (charge.type !== transaction?.tableChargeType ||
+                (charge.value ?? 0) != (transaction.serviceChargeValue ?? 0))
+            serviceChargeInputRef.current?.setValue(enable ? charge : undefined)
+          }}
+        />
+      )}
+    />
+  )
+
+  const renderDiscountForm = () => (
+    <BottomSheetInputView
+      ref={discountInputRef}
+      title={'Update discount'}
+      onChangeValue={(charge) => {
+        const chargeObject = charge as IChargeAmount
+        updateTransaction
+          .mutateAsync({
+            transaction: {
+              discountType: chargeObject.type as keyof typeof COST_TYPE,
+              discountValue: chargeObject.value,
+            },
+            id: transactionId,
+          })
+          .then((result) => {
+            setTransaction(result)
+          })
+      }}
+      renderInput={() => (
+        <AppChargeValueInput
+          label={'Discount'}
+          maxValue={transaction?.totalProductSellingPrice}
+          selectTextOnFocus
+          value={transaction?.discountValue}
+          type={transaction?.discountType}
+          onChanged={(charge) => {
+            const enable =
+              !!charge &&
+              (charge.type !== transaction?.discountType ||
+                (charge.value ?? 0) != (transaction.discountValue ?? 0))
+            discountInputRef.current?.setValue(enable ? charge : undefined)
+          }}
+        />
       )}
     />
   )
 
   return (
     <ScrollView
+      nestedScrollEnabled
       style={styles.container}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
@@ -271,16 +332,27 @@ export default function TransactionDetailScreen() {
 
       <ListItemView
         label={'Service Charge'}
-        text={numberWithCommas(transaction?.serviceChargeValue)}
+        text={getChargeAmount(
+          {
+            type: transaction?.serviceChargeType ?? COST_TYPE[COST_TYPE.Amount],
+            value: transaction?.serviceChargeValue ?? 0,
+          },
+          transaction?.totalProductSellingPrice ?? 0,
+        )}
         textStyle={{ color: R.Colors.Green }}
         onPress={serviceChargeInputRef.current?.open}
       />
       <ListItemView
         label={'Discount'}
-        text={numberWithCommas(
-          transaction?.discount ? transaction?.discount?.value : transaction?.discountValue,
+        text={getChargeAmount(
+          {
+            type: transaction?.discountType ?? COST_TYPE[COST_TYPE.Amount],
+            value: transaction?.discountValue ?? 0,
+          },
+          transaction?.totalProductSellingPrice ?? 0,
         )}
         textStyle={{ color: R.Colors.Red }}
+        onPress={discountInputRef.current?.open}
       />
       {!!transaction?.taxRate && (
         <ListItemView
@@ -305,7 +377,7 @@ export default function TransactionDetailScreen() {
           icon={'check'}
           loading={finishLoading}
           iconLeft
-          onPress={onFinish}
+          onPress={finishPopupRef.current?.open}
         />
 
         <AppButton
@@ -329,9 +401,15 @@ export default function TransactionDetailScreen() {
           onPress={onCancel}
         />
       </View>
+      <ConfirmFinishTransactionPopup
+        ref={finishPopupRef}
+        totalAmount={transaction?.totalAmount ?? 0}
+        onFinishTransaction={onFinish}
+      />
       {renderEditCustomerNameForm()}
       {renderEditCustomerNumberForm()}
       {renderServiceChargeForm()}
+      {renderDiscountForm()}
     </ScrollView>
   )
 }

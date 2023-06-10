@@ -4,9 +4,10 @@ import { Modalize } from 'react-native-modalize'
 import BottomSheetTopView from './BottomSheetTopView'
 import R from '@resource'
 import { AppBottomSheet, AppButton } from '@uikit'
+import { IChargeAmount } from '@modal'
 
 type BottomSheetInputViewProps = {
-  onChangeValue: (value: string) => void
+  onChangeValue: (value: string | IChargeAmount) => void
   title: string
   renderInput: () => JSX.Element
   height?: number
@@ -15,7 +16,7 @@ type BottomSheetInputViewProps = {
 export type BottomSheetInputViewRefType = {
   open: () => void
   close: () => void
-  setValue: (text: string) => void
+  setValue: (text?: string | IChargeAmount) => void
 }
 
 const BottomSheetInputView = forwardRef(
@@ -25,28 +26,29 @@ const BottomSheetInputView = forwardRef(
   ): JSX.Element => {
     const bottomSheetRef = useRef<Modalize>()
     const [enable, setEnable] = useState(false)
-    const [value, setValue] = useState('')
+    const [value, setValue] = useState<string | IChargeAmount>()
     useImperativeHandle(ref, () => ({
       open() {
         bottomSheetRef.current?.open()
-        setValue('')
+        setValue(undefined)
         setEnable(false)
       },
       close() {
         bottomSheetRef.current?.close()
       },
-      setValue(text: string) {
-        console.log('setValue ', text)
-        setValue(text)
-        setEnable(!!text)
+      setValue(val?: string | IChargeAmount) {
+        setValue(val)
+        setEnable(!!val)
       },
     }))
     const onClosePress = () => {
       bottomSheetRef.current?.close()
     }
     const onSavePress = () => {
-      onChangeValue(value)
-      bottomSheetRef.current?.close()
+      if (value) {
+        onChangeValue(value)
+        bottomSheetRef.current?.close()
+      }
     }
     return (
       <AppBottomSheet
