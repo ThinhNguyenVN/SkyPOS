@@ -7,6 +7,7 @@ import { useCreateTransaction } from '@hook/userOrder'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { RootNavigationProp, RootStackParamList } from 'src/modal/navigator'
 import { useGetTableCategoryList } from '@hook/useTable'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -69,7 +70,12 @@ export default function StartTransactionScreen() {
   }, [tableCategories])
 
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView
+      style={styles.container}
+      contentContainerStyle={R.Styles.scrollContainer}
+      showsVerticalScrollIndicator={false}
+      extraScrollHeight={50}
+    >
       <AppSelectInput
         label="Table"
         data={tableItems}
@@ -94,6 +100,6 @@ export default function StartTransactionScreen() {
           loading={loading}
         />
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   )
 }
