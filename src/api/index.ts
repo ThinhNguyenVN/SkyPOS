@@ -4,7 +4,7 @@ import type { IOrder, IProductCategory, ITable, ITableCategory, ITransaction } f
 import R from '@resource'
 
 const api = axios.create({
-  baseURL: `http://localhost:3000/api`,
+  baseURL: `${Config.API_URL}/api`,
   timeout: R.Constants.REQUEST_TIMEOUT,
   headers: {
     Accept: 'application/vnd.github.v3+json',
@@ -13,6 +13,8 @@ const api = axios.create({
   },
   withCredentials: true,
 })
+
+console.log('.....', Config.API_URL)
 
 export const getTableList = async (): Promise<ITable[]> => {
   const res = await api.get('/tables/').then((result) => result.data)
@@ -23,7 +25,9 @@ export const getTableCategoryList = async (): Promise<{
   categories: ITableCategory[]
   takeawayTransactions: ITransaction[]
 }> => {
+  console.log('getTableCategoryList ---')
   const res = await api.get('/tables/categories/').then((res) => res.data)
+   console.log('getTableCategoryList ---', res)
   return res.data
 }
 

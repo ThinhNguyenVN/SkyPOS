@@ -34,7 +34,6 @@ export default function TableScreen() {
   const { data, refetch } = useGetTableCategoryList()
   const [refreshing, setRefreshing] = useState(false)
   const isFocused = useIsFocused()
-  const uid = useId()
 
   const tableCategories = useMemo(() => {
     return data?.categories || []
