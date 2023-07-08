@@ -2,14 +2,16 @@ import Config from 'react-native-config'
 import axios from 'axios'
 import type { IOrder, IProductCategory, ITable, ITableCategory, ITransaction } from '@modal'
 import R from '@resource'
+import { Platform } from 'react-native'
 
+const url = Platform.select({ ios: `${Config.API_URL}/api`, android: 'http://127.0.0.1:3000/api' })
 const api = axios.create({
-  baseURL: `${Config.API_URL}/api`,
+  baseURL: url,
   timeout: R.Constants.REQUEST_TIMEOUT,
   headers: {
     Accept: 'application/vnd.github.v3+json',
     Authorization: 'sky-pos',
-    'Content-Type': 'application/json',
+    'content-type': 'application/json',
   },
   withCredentials: true,
 })
@@ -27,7 +29,7 @@ export const getTableCategoryList = async (): Promise<{
 }> => {
   console.log('getTableCategoryList ---')
   const res = await api.get('/tables/categories/').then((res) => res.data)
-   console.log('getTableCategoryList ---', res)
+  console.log('getTableCategoryList ---', res)
   return res.data
 }
 
