@@ -16,7 +16,9 @@
       "@resource/*": ["./src/resource/*"],
       "@store/*": ["./src/store/*"],
       "@uikit": ["./src/uikit"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@module/*": ["./src/module/*"],
+      "@service/*": ["./src/service/*"]
     }
   },
   

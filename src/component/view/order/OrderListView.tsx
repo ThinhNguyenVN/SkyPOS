@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { makeStyles } from '@rneui/base'
 import R from '@resource'
 import type { INavigator, IOrder, IProduct } from '@modal'
@@ -19,6 +19,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useCreateOrders } from '@hook/userOrder'
 import { useNavigation } from '@react-navigation/native'
+import { printOrders } from '@service/printer'
+import { AlertContext, PopupButtonProps } from '@container/AlertContainer'
 const useStyles = makeStyles(() => ({
   listContainer: {
     paddingBottom: 150,
@@ -64,6 +66,7 @@ export default function OrderListView() {
   const navigation = useNavigation<INavigator.RootNavigationProp>()
   const { orders, setOrders, scrollView, transaction, setHasChange } = useOrderContext()
   const [loading, setLoading] = useState(false)
+  const { toast, toastDismiss, popup } = useContext(AlertContext)
 
   const onQuantityChange = (quantity: number, product: IProduct, order: IOrder) => {
     setOrders(updateOrderList(transaction, orders, quantity, product, order))
@@ -95,16 +98,55 @@ export default function OrderListView() {
   const onCancelPress = () => {
     navigation.goBack()
   }
+
+  const onPrinterError = () => {
+    const buttons: PopupButtonProps[] = [
+      {
+        label: 'Re-Print',
+        onPress: printOrder,
+        type: 'primary',
+      },
+      {
+        label: 'Cancel',
+        onPress: finishOrder,
+        type: 'none',
+      },
+    ]
+    popup({
+      title: '',
+      message: 'Can not connect to printer, do you want to re-reprint?',
+      icon: 'printer',
+      buttons,
+      dontUseCancelButton: true,
+      buttonLayout: 'column',
+    })
+  }
+
+  const finishOrder = () => {
+    setHasChange && setHasChange(false, navigation.goBack)
+  }
+
+  const printOrder = () => {
+    toast({ msg: 'Printing ...' })
+    !!transaction &&
+      printOrders(orders, transaction)
+        .then(finishOrder)
+        .catch(() => {
+          onPrinterError()
+        })
+        .finally(() => {
+          toastDismiss()
+        })
+  }
+
   const onOrderPress = () => {
     setLoading(true)
     createOrders
       .mutateAsync(orders)
       .then((results) => {
         if (results) {
-          setHasChange &&
-            setHasChange(false, () => {
-              navigation.goBack()
-            })
+          // TODO: check print or not when implement shop data and shop type
+          printOrder()
         }
       })
       .finally(() => {

@@ -11,6 +11,7 @@ import type ITableCategory from './ITableCategory'
 import type ITransaction from './ITransaction'
 import type IUser from './IUser'
 import type * as INavigator from './navigator'
+import type * as IReceipt from './IReceipt'
 
 export interface IChargeAmount {
   value: number
@@ -30,4 +31,5 @@ export {
   IOrder,
   ITransaction,
   INavigator,
+  IReceipt,
 }

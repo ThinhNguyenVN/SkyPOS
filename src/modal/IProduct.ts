@@ -19,7 +19,7 @@ export default interface Product {
   pointId?: number
   printerId?: number
   printer?: IPrinter
-  categories: IProductCategory[]
+  categories?: IProductCategory[]
   priority?: number
   discountId?: number
   discount?: IDiscount

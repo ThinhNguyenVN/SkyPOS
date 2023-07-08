@@ -2,6 +2,8 @@ import { IChargeAmount, ITransaction } from '@modal'
 import R from '@resource'
 import { COST_TYPE } from '@resource/Enums'
 import currency from 'currency.js'
+// @ts-ignore
+import diacritic from 'diacritic'
 
 export const formatCurrency = (
   value: number,
@@ -57,4 +59,8 @@ export function getTakeoutName(transaction?: ITransaction) {
     return null
   }
   return `TA-${transaction.id}`
+}
+
+export function removeAccents(text: string) {
+  return diacritic.clean(text)
 }

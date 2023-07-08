@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import AlertContainer from '@container/AlertContainer'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'react-native'
+import BixolonPrinterModule from '@module/BixolonPrinterModule'
 
 const queryClient = new QueryClient()
 
@@ -14,6 +15,11 @@ function App(): JSX.Element {
   useEffect(() => {
     RNBootSplash.hide({ fade: true })
   })
+
+  useEffect(() => {
+    BixolonPrinterModule.helloPrinter('ay yo printer bixolon')
+  }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>

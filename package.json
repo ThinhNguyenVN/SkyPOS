@@ -19,6 +19,7 @@
     "@types/i18n-js": "3.8.2",
     "axios": "^1.4.0",
     "currency.js": "^2.0.4",
+    "diacritic": "^0.0.2",
     "i18n-js": "3.8.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

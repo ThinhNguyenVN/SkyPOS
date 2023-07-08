@@ -16,6 +16,7 @@ import { useDidUpdateEffect } from '@hook/index'
 import BottomSheetInputView, { BottomSheetInputViewRefType } from '@view/BottomSheetInputView'
 import { IChargeAmount } from '@modal'
 import ConfirmFinishTransactionPopup, { FinishPopupRefType } from './ConfirmFinishTransactionPopup'
+import { printReceipt } from '@service/printer'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -67,7 +68,7 @@ export default function TransactionDetailScreen() {
   const finishTransaction = useFinishTransaction()
   const updateTransaction = useUpdateTransaction()
   const isFocused = useIsFocused()
-  const { toast, popup } = useContext(AlertContext)
+  const { toast, popup, toastDismiss } = useContext(AlertContext)
   const customerNameInputRef = useRef<BottomSheetInputViewRefType>(null)
   const customerNumberInputRef = useRef<BottomSheetInputViewRefType>(null)
   const serviceChargeInputRef = useRef<BottomSheetInputViewRefType>(null)
@@ -127,7 +128,7 @@ export default function TransactionDetailScreen() {
   const onCancel = () => {
     const buttons: PopupButtonProps[] = [
       {
-        label: 'Yes',
+        label: 'OK',
         onPress: (): void => {
           setCancelLoading(true)
           const transactionParam = {
@@ -147,7 +148,6 @@ export default function TransactionDetailScreen() {
         type: 'none',
       },
     ]
-
     popup({
       title: '',
       message: 'Are you sure you want to cancel this transaction?',
@@ -159,7 +159,16 @@ export default function TransactionDetailScreen() {
   }
 
   const onPrint = () => {
-    toast({ msg: 'Printing ...', autoHide: true })
+    toast({ msg: 'Printing ...' })
+    if (transaction) {
+      printReceipt(transaction)
+        .then(() => {
+          toastDismiss()
+        })
+        .catch((err) => {
+          toast({ msg: err.message, type: 'warning', autoHide: true })
+        })
+    }
   }
 
   const onOrdersPress = () => {
@@ -377,6 +386,7 @@ export default function TransactionDetailScreen() {
           size={'large'}
           style={styles.button}
           icon={'check'}
+          disabled={!transaction?.orders?.length}
           loading={finishLoading}
           iconLeft
           onPress={finishPopupRef.current?.open}
@@ -387,6 +397,7 @@ export default function TransactionDetailScreen() {
           type={'secondary'}
           size={'large'}
           icon={'printer'}
+          disabled={!transaction?.orders?.length}
           style={styles.button}
           loading={printLoading}
           onPress={onPrint}

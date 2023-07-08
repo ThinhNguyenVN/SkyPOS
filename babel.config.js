@@ -35,6 +35,8 @@ module.exports = {
           '@store': './src/store',
           '@uikit': './src/uikit',
           '@utils': './src/utils',
+          '@module': './src/module',
+          '@service': './src/service',
         },
       },
     ],

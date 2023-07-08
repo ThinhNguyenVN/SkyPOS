@@ -4,7 +4,7 @@ import type { IOrder, IProductCategory, ITable, ITableCategory, ITransaction } f
 import R from '@resource'
 
 const api = axios.create({
-  baseURL: `${Config.API_URL}/api`,
+  baseURL: `http://localhost:3000/api`,
   timeout: R.Constants.REQUEST_TIMEOUT,
   headers: {
     Accept: 'application/vnd.github.v3+json',
